@@ -14,8 +14,8 @@ module type PROCESS = sig
   val random : int t
 end
 
-
 module type STREAM = sig
+
   type 'a t
 
   (** An ephemeral process of creation *)
@@ -60,17 +60,20 @@ module MakeStream : STREAM_FUNCTOR = functor (P : PROCESS) -> struct
     | None   -> Stream (fun () -> Nil)
 end
 
-module ProcessStream = MakeStream(Process)
+module Examples = struct
 
-exception End
+  module ProcessStream = MakeStream(Process)
 
-let next_random : unit -> int =
-  let process = Process.random in
-  let module P = ProcessStream in
-  let seed = ref (P.memo process) in
-  let next () =
-    match P.expose !seed with
-    | P.Cons (curr, next) -> seed := next; curr
-    | P.Nil               -> raise End
-  in
-  next
+  exception End
+
+  let next_random : unit -> int =
+    let process = Process.random in
+    let module P = ProcessStream in
+    let seed = ref (P.memo process) in
+    let next () =
+      match P.expose !seed with
+      | P.Cons (curr, next) -> seed := next; curr
+      | P.Nil               -> raise End
+    in
+    next
+end
