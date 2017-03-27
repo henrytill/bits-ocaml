@@ -23,6 +23,7 @@ module type NAT = sig
 end
 
 module Nat : NAT = struct
+
   type t = int
 
   type 'a view =
@@ -46,19 +47,6 @@ module Nat : NAT = struct
   let add x y = x + y
 end
 
-let zero = Nat.into Nat.Zero
-let succ n = Nat.into (Nat.Succ n)
-
-let seven = succ (succ (succ (succ (succ (succ (succ zero))))))
-
-let rec fib x =
-  let module N = Nat in
-  match N.out x with
-  | N.Zero   -> zero
-  | N.Succ n -> match N.out n with
-    | N.Zero   -> succ zero
-    | N.Succ n -> N.add (fib n) (fib (succ n))
-
 module type TREE = sig
   type t
   type 'a view =
@@ -69,6 +57,7 @@ module type TREE = sig
 end
 
 module Tree : TREE = struct
+
   type 'a view =
     | Tip
     | Leaf of int
@@ -84,8 +73,24 @@ module Tree : TREE = struct
   let out (In x) = x
 end
 
-let tip = Tree.into Tree.Tip
-let leaf x = Tree.into (Tree.Leaf x)
-let fork x y = Tree.into (Tree.Fork (x, y))
+module Examples = struct
 
-let example = fork (fork (leaf 1) (leaf 2)) (fork (leaf 3) tip)
+  let zero   = Nat.into Nat.Zero
+  let succ n = Nat.into (Nat.Succ n)
+
+  let seven = succ (succ (succ (succ (succ (succ (succ zero))))))
+
+  let rec fib x =
+    let module N = Nat in
+    match N.out x with
+    | N.Zero   -> zero
+    | N.Succ n -> match N.out n with
+      | N.Zero   -> succ zero
+      | N.Succ n -> N.add (fib n) (fib (succ n))
+
+  let tip      = Tree.into Tree.Tip
+  let leaf x   = Tree.into (Tree.Leaf x)
+  let fork x y = Tree.into (Tree.Fork (x, y))
+
+  let tree = fork (fork (leaf 1) (leaf 2)) (fork (leaf 3) tip)
+end
