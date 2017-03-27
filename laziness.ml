@@ -26,14 +26,16 @@ module type STREAM = sig
     | Nil
     | Cons of 'a * 'a t
 
+  exception BlackHole
+
   (** Exposes the stream *)
   val expose : 'a t -> 'a front
 
   (** Creates a persistent stream from an ephemeral process of creation for its elements *)
   val memo : 'a process -> 'a t
 
-  (* Creates recursive networks of streams *)
-  (* val fix : ('a t -> 'a t) -> 'a t *)
+  (** Creates recursive networks of streams *)
+  val fix : ('a t -> 'a t) -> 'a t
 end
 
 module type STREAM_FUNCTOR = functor (P : PROCESS) -> STREAM with type 'a process := 'a P.t
@@ -52,12 +54,19 @@ module MakeStream : STREAM_FUNCTOR = functor (P : PROCESS) -> struct
     | Nil
     | Cons of 'a * 'a t
 
+  exception BlackHole
+
   let expose (Stream d) = d ()
 
   let rec memo process =
     match process () with
     | Some v -> Stream (fun () -> Cons (v, memo process))
     | None   -> Stream (fun () -> Nil)
+
+  let fix f =
+    let r = ref (Stream (fun () -> raise BlackHole)) in
+    let t = Stream (fun () -> expose !r) in
+    r := f t; t
 end
 
 module Examples = struct
@@ -69,7 +78,8 @@ module Examples = struct
   let next_random : unit -> int =
     let process = Process.random in
     let module P = ProcessStream in
-    let seed = ref (P.memo process) in
+    let start = P.memo process in
+    let seed = ref start in
     let next () =
       match P.expose !seed with
       | P.Cons (curr, next) -> seed := next; curr
