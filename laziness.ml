@@ -1,7 +1,6 @@
 (** Lazy datatypes inspired by
     {{: https://existentialtype.wordpress.com/2011/04/24/the-real-point-of-laziness/ }
-    {i The Point of Laziness}}, by Bob Harper
-  *)
+    {i The Point of Laziness}}, by Bob Harper *)
 
 module type PROCESS = sig
   (** Represents a function that, when applied, generates a value of some type *)
@@ -42,8 +41,8 @@ module type STREAM_FUNCTOR = functor (P : PROCESS) -> STREAM with type 'a proces
 
 module Process : PROCESS = struct
   type 'a t = unit -> 'a option
-  let stdin ()  = Some (input_char stdin)
-  let random () =  Some (Random.int 127)
+  let stdin  () = Some (input_char stdin)
+  let random () = Some (Random.int 127)
 end
 
 module MakeStream : STREAM_FUNCTOR = functor (P : PROCESS) -> struct
