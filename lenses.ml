@@ -3,16 +3,16 @@
     {{: https://github.com/freebroccolo/ocaml-optics}{i ocaml-optics} library}
 *)
 
-class type ['s, 't, 'a, 'b] lensp = object
+class type ['s, 't, 'a, 'b] lens = object
   method get: 's -> 'a
   method set: 'b -> 's -> 't
 end
 
-type ('s, 'a) lens = ('s, 's, 'a, 'a) lensp
+type ('s, 'a) lens_prime = ('s, 's, 'a, 'a) lens
 
-let compose this other = object
-  method get s   = other#get (this#get s)
-  method set d s = this#set (other#set d (this#get s)) s
+let compose this that = object
+  method get s   = that#get (this#get s)
+  method set d s = this#set (that#set d (this#get s)) s
 end
 
 let get s l = l#get s
@@ -43,19 +43,19 @@ let fred =
 
 (* Some lenses for the data *)
 
-let name : (person, string) lens = object
+let name : (person, string) lens_prime = object
   method get = fun x   -> x._name
   method set = fun v x -> { x with _name = v }
 end
 
-let addr : (person, address) lens = object
+let addr : (person, address) lens_prime = object
   method get = fun x   -> x._addr
   method set = fun v x -> { x with _addr = v }
 end
 
-let postcode : (address, string) lens = object
+let postcode : (address, string) lens_prime = object
   method get = fun x   -> x._postcode
-  method set = fun v x -> { x with _postcode = v}
+  method set = fun v x -> { x with _postcode = v }
 end
 
 (* Some examples *)
