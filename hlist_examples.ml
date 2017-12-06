@@ -1,7 +1,7 @@
-open Hlist
+open HList
 
 let x = HCons (3, HCons ("str", HCons (35.0, HNil)))
 
-let a = get EZ x
-let b = get (ES EZ) x
-let c = get (ES (ES EZ)) x
+let a = get Z x
+let b = get (S Z) x
+let c = get (S (S Z)) x
