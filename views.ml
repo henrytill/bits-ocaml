@@ -7,7 +7,7 @@ module type VIEW = sig
   type t
   type 'a view
   val into : t view -> t
-  val out  : t -> t view
+  val out  : t      -> t view
 end
 
 module type NAT = sig
@@ -15,9 +15,9 @@ module type NAT = sig
   type 'a view =
     | Zero
     | Succ of 'a
-  val to_int : t -> int
+  val to_int : t   -> int
   val of_int : int -> t
-  val add    : t -> t -> t
+  val add    : t   -> t -> t
   include SHOW with type t := t
   include VIEW with type t := t and type 'a view := 'a view
 end
@@ -31,7 +31,7 @@ module Nat : NAT = struct
     | Succ of 'a
 
   let into = function
-    | Zero -> 0
+    | Zero   -> 0
     | Succ n -> n + 1
 
   let out = function
@@ -66,8 +66,8 @@ module Tree : TREE = struct
   type t = In of t view
 
   let into = function
-    | Tip -> In Tip
-    | Leaf x -> In (Leaf x)
+    | Tip         -> In Tip
+    | Leaf x      -> In (Leaf x)
     | Fork (x, y) -> In (Fork (x, y))
 
   let out (In x) = x
