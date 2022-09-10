@@ -84,9 +84,12 @@ module Examples = struct
     let module N = Nat in
     match N.out x with
     | N.Zero   -> zero
-    | N.Succ n -> match N.out n with
-      | N.Zero   -> succ zero
-      | N.Succ n -> N.add (fib n) (fib (succ n))
+    | N.Succ n ->
+      begin
+        match N.out n with
+        | N.Zero   -> succ zero
+        | N.Succ n -> N.add (fib n) (fib (succ n))
+      end
 
   let tip      = Tree.into Tree.Tip
   let leaf x   = Tree.into (Tree.Leaf x)
