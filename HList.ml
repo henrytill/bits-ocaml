@@ -1,7 +1,5 @@
-type hnil
-
 type _ t =
-  | HNil  : hnil t
+  | HNil  : unit t
   | HCons : 'a * 'b t -> ('a * 'b) t
 
 type (_, _) index =
