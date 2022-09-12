@@ -7,7 +7,7 @@ module type VIEW = sig
   type t
   type 'a view
   val into : t view -> t
-  val out  : t      -> t view
+  val out : t -> t view
 end
 
 module type NAT = sig
@@ -15,15 +15,14 @@ module type NAT = sig
   type 'a view =
     | Zero
     | Succ of 'a
-  val to_int : t   -> int
+  val to_int : t -> int
   val of_int : int -> t
-  val add    : t   -> t -> t
+  val add : t -> t -> t
   include SHOW with type t := t
   include VIEW with type t := t and type 'a view := 'a view
 end
 
 module Nat : NAT = struct
-
   type t = int
 
   type 'a view =
@@ -57,7 +56,6 @@ module type TREE = sig
 end
 
 module Tree : TREE = struct
-
   type 'a view =
     | Tip
     | Leaf of int
@@ -74,8 +72,7 @@ module Tree : TREE = struct
 end
 
 module Examples = struct
-
-  let zero   = Nat.into Nat.Zero
+  let zero = Nat.into Nat.Zero
   let succ n = Nat.into (Nat.Succ n)
 
   let seven = succ (succ (succ (succ (succ (succ (succ zero))))))
@@ -91,8 +88,8 @@ module Examples = struct
         | N.Succ n -> N.add (fib n) (fib (succ n))
       end
 
-  let tip      = Tree.into Tree.Tip
-  let leaf x   = Tree.into (Tree.Leaf x)
+  let tip = Tree.into Tree.Tip
+  let leaf x = Tree.into (Tree.Leaf x)
   let fork x y = Tree.into (Tree.Fork (x, y))
 
   let tree = fork (fork (leaf 1) (leaf 2)) (fork (leaf 3) tip)
