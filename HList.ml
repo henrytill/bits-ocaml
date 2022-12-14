@@ -1,3 +1,7 @@
+(* Notes:
+   https://github.com/ocaml/ocaml/pull/8900#issuecomment-539530661
+   https://okmij.org/ftp/ML/#hlist *)
+
 type _ t =
   | HNil  : unit t
   | HCons : 'a * 'b t -> ('a * 'b) t
