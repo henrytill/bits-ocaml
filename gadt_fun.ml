@@ -3,7 +3,7 @@ type zero = Zero
 and 'a succ = Succ of 'a
 
 (** length-indexed vector *)
-type (_,_) vec =
+type (_, _) vec =
   | Nil  : ('a, zero) vec
   | Cons : 'a * ('a, 'n) vec -> ('a, 'n succ) vec
 
@@ -20,7 +20,7 @@ let head : type a n. (a, n succ) vec -> a =
 ;;
 
 (** equality witness *)
-type (_,_) eq = Refl : ('a, 'a) eq
+type (_, _) eq = Refl : ('a, 'a) eq
 
 (** type-safe cast *)
 let cast : type a b. (a, b) eq -> a -> b =
