@@ -72,8 +72,8 @@ module Tree : TREE = struct
 end
 
 module Examples = struct
-  let zero = Nat.into Nat.Zero
-  let succ n = Nat.into (Nat.Succ n)
+  let zero = Nat.(into Zero)
+  let succ n = Nat.(into (Succ n))
 
   let seven = succ (succ (succ (succ (succ (succ (succ zero))))))
 
@@ -88,9 +88,9 @@ module Examples = struct
         | N.Succ n -> N.add (fib n) (fib (succ n))
       end
 
-  let tip = Tree.into Tree.Tip
-  let leaf x = Tree.into (Tree.Leaf x)
-  let fork x y = Tree.into (Tree.Fork (x, y))
+  let tip = Tree.(into Tip)
+  let leaf x = Tree.(into (Leaf x))
+  let fork x y = Tree.(into (Fork (x, y)))
 
   let tree = fork (fork (leaf 1) (leaf 2)) (fork (leaf 3) tip)
 end

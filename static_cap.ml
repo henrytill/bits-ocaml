@@ -18,7 +18,6 @@ module type SAFE_ARRAY = sig
 end
 
 module SafeArray : SAFE_ARRAY = struct
-
   type ('s, 'a) t = 'a array
 
   type 's index = int
