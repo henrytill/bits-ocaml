@@ -14,7 +14,6 @@ module type PROCESS = sig
 end
 
 module type STREAM = sig
-
   type 'a t
 
   (** An ephemeral process of creation *)
@@ -46,7 +45,6 @@ module Process : PROCESS = struct
 end
 
 module MakeStream : STREAM_FUNCTOR = functor (P : PROCESS) -> struct
-
   type 'a t = Stream of (unit -> 'a front)
 
   and 'a front =
@@ -69,7 +67,6 @@ module MakeStream : STREAM_FUNCTOR = functor (P : PROCESS) -> struct
 end
 
 module Examples = struct
-
   module ProcessStream = MakeStream(Process)
 
   exception End
