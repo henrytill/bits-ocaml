@@ -1,0 +1,6 @@
+/input/
+/output/
+*.cmi
+*.cmx
+*.o
+readline
