@@ -18,6 +18,7 @@ module type NAT = sig
   val to_int : t -> int
   val of_int : int -> t
   val add : t -> t -> t
+  val mul : t -> t -> t
   include SHOW with type t := t
   include VIEW with type t := t and type 'a view := 'a view
 end
@@ -44,6 +45,8 @@ module Nat : NAT = struct
   let of_int x = x
 
   let add x y = x + y
+
+  let mul x y = x * y
 end
 
 module type TREE = sig
@@ -77,16 +80,22 @@ module Examples = struct
 
   let seven = succ (succ (succ (succ (succ (succ (succ zero))))))
 
+  let rec fact m =
+    let open Nat in
+    let one = succ zero in
+    match out m with
+    | Zero   -> one
+    | Succ n -> mul m (fact n)
+
   let rec fib x =
-    let module N = Nat in
-    match N.out x with
-    | N.Zero   -> zero
-    | N.Succ n ->
-      begin
-        match N.out n with
-        | N.Zero   -> succ zero
-        | N.Succ n -> N.add (fib n) (fib (succ n))
-      end
+    let open Nat in
+    match out x with
+    | Zero   -> zero
+    | Succ n -> (
+        match out n with
+        | Zero   -> succ zero
+        | Succ n -> add (fib n) (fib (succ n)))
+
 
   let tip = Tree.(into Tip)
   let leaf x = Tree.(into (Leaf x))
