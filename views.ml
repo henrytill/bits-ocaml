@@ -87,14 +87,16 @@ module Examples = struct
     | Zero   -> one
     | Succ n -> mul m (fact n)
 
-  let rec fib x =
+  let rec fib m =
     let open Nat in
-    match out x with
+    match out m with
     | Zero   -> zero
-    | Succ n -> (
+    | Succ n ->
+      begin
         match out n with
         | Zero   -> succ zero
-        | Succ n -> add (fib n) (fib (succ n)))
+        | Succ n -> add (fib n) (fib (succ n))
+      end
 
 
   let tip = Tree.(into Tip)
