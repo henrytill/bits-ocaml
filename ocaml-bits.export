@@ -1,12 +1,15 @@
 opam-version: "2.0"
 compiler: ["ocaml-base-compiler.4.14.1"]
-roots: ["ocaml-base-compiler.4.14.1"]
+roots: ["delimcc.2023.06.17" "ocaml-base-compiler.4.14.1"]
 installed: [
   "base-bigarray.base"
   "base-threads.base"
   "base-unix.base"
+  "conf-which.1"
+  "delimcc.2023.06.17"
   "ocaml.4.14.1"
   "ocaml-base-compiler.4.14.1"
   "ocaml-config.2"
   "ocaml-options-vanilla.1"
+  "ocamlfind.1.9.6"
 ]

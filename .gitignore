@@ -1,7 +1,11 @@
+config.mk
 /_opam/
 /input/
 /output/
 *.cmi
 *.cmx
+*.cmo
 *.o
+delimcc_test
+delimcc_top
 readline
