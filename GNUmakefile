@@ -1,10 +1,11 @@
 .SUFFIXES:
 
-OCAMLFIND = ocamlfind
-OCAMLC = ocamlc
-OCAMLOPT = ocamlopt
-OCAMLMKTOP = ocamlmktop
 FUZZ = afl-fuzz
+OCAMLC = ocamlc
+OCAMLFIND = ocamlfind
+OCAMLMKTOP = ocamlmktop
+OCAMLOPT = ocamlopt
+OPAM = opam
 
 OPTCOMPFLAGS =
 
@@ -39,9 +40,14 @@ input/testcase: input
 
 .PHONY: fuzz
 fuzz: readline input/testcase
-	afl-fuzz -m none -i input -o output ./readline
+	$(FUZZ) -m none -i input -o output ./readline
 
 .PHONY: clean
 clean:
 	rm -f $(BIN)
 	rm -f *.cmi *.cmx *.cmo *.o
+
+ocaml-bits.export: FORCE
+	$(OPAM) switch export $@
+
+FORCE:
