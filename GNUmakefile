@@ -36,7 +36,7 @@ input:
 	mkdir -p $@
 
 input/testcase: input
-	echo asdf > input/testcase
+	echo asdf > $@
 
 .PHONY: fuzz
 fuzz: readline input/testcase
