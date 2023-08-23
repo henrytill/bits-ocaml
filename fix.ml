@@ -17,16 +17,18 @@ end
 
 module List = struct
   module Param = struct
-    type ('a, 'b) t = Nil | Cons of 'b * 'a
+    type ('a, 'b) t =
+      | Nil
+      | Cons of 'b * 'a
   end
-  include Fix(Param)
+
+  include Fix (Param)
 end
 
 open List.Param
 open List
 
-let rec to_usual_list =
-  function
+let rec to_usual_list = function
   | In Nil -> []
   | In (Cons (x, xs)) -> x :: to_usual_list xs
 
@@ -46,17 +48,19 @@ end
 
 module EqList = struct
   module Param = struct
-    type ('a, 'b) t = Nil | Cons of 'b * 'a
+    type ('a, 'b) t =
+      | Nil
+      | Cons of 'b * 'a
   end
-  include EqFix(Param)
+
+  include EqFix (Param)
 end
 
 open EqList.Param
 
-let rec to_usual_list =
-  function
+let rec to_usual_list = function
   | Nil -> []
-  | (Cons (x, xs)) -> x :: to_usual_list xs
+  | Cons (x, xs) -> x :: to_usual_list xs
 
 (*The syntax of modules is quite heavy and could appear frightening. If
   you insist you can use first-class modules to move some of these uses

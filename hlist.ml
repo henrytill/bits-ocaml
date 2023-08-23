@@ -3,7 +3,7 @@
    https://okmij.org/ftp/ML/#hlist *)
 
 type _ t =
-  | HNil  : unit t
+  | HNil : unit t
   | HCons : 'a * 'b t -> ('a * 'b) t
 
 type (_, _) index =
@@ -11,24 +11,21 @@ type (_, _) index =
   | S : ('xs, 'a) index -> ('x * 'xs, 'a) index
 
 let rec get : type a b. (a, b) index -> a t -> b =
-  fun index l -> match index, l with
-    | Z  , HCons (h, _) -> h
-    | S e, HCons (_, t) -> get e t
-    | _  , HNil         -> .
-;;
+ fun index l ->
+  match (index, l) with
+  | Z, HCons (h, _) -> h
+  | S e, HCons (_, t) -> get e t
+  | _, HNil -> .
 
 let rec length : type tys. tys t -> int = function
-  | HNil         -> 0
+  | HNil -> 0
   | HCons (_, t) -> 1 + length t
-;;
 
 let hhead = function
   | HCons (h, _) -> h
-;;
 
 let htail = function
   | HCons (_, t) -> t
-;;
 
 module Examples = struct
   let x = HCons (3, HCons ("str", HCons (35.0, HNil)))

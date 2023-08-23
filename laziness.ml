@@ -3,21 +3,21 @@
     {i The Point of Laziness}}, by Bob Harper *)
 
 module type PROCESS = sig
-  (** Represents a function that, when applied, generates a value of some type *)
   type 'a t = unit -> 'a option
+  (** Represents a function that, when applied, generates a value of some type *)
 
-  (** Represents the UNIX standard input *)
   val stdin : char t
+  (** Represents the UNIX standard input *)
 
-  (** Represents a random number generator *)
   val random : int t
+  (** Represents a random number generator *)
 end
 
 module type STREAM = sig
   type 'a t
 
-  (** An ephemeral process of creation *)
   type 'a process
+  (** An ephemeral process of creation *)
 
   (** The type of values that arise when the stream is exposed *)
   type 'a front =
@@ -26,48 +26,54 @@ module type STREAM = sig
 
   exception BlackHole
 
-  (** Exposes the stream *)
   val expose : 'a t -> 'a front
+  (** Exposes the stream *)
 
-  (** Creates a persistent stream from an ephemeral process of creation for its elements *)
   val memo : 'a process -> 'a t
+  (** Creates a persistent stream from an ephemeral process of creation for its elements *)
 
-  (** Creates recursive networks of streams *)
   val fix : ('a t -> 'a t) -> 'a t
+  (** Creates recursive networks of streams *)
 end
 
 module type STREAM_FUNCTOR = functor (P : PROCESS) -> STREAM with type 'a process := 'a P.t
 
 module Process : PROCESS = struct
   type 'a t = unit -> 'a option
-  let stdin  () = Some (input_char stdin)
+
+  let stdin () = Some (input_char stdin)
   let random () = Some (Random.int 127)
 end
 
-module MakeStream : STREAM_FUNCTOR = functor (P : PROCESS) -> struct
-  type 'a t = Stream of (unit -> 'a front)
+module MakeStream : STREAM_FUNCTOR =
+functor
+  (P : PROCESS)
+  ->
+  struct
+    type 'a t = Stream of (unit -> 'a front)
 
-  and 'a front =
-    | Nil
-    | Cons of 'a * 'a t
+    and 'a front =
+      | Nil
+      | Cons of 'a * 'a t
 
-  exception BlackHole
+    exception BlackHole
 
-  let expose (Stream d) = d ()
+    let expose (Stream d) = d ()
 
-  let rec memo process =
-    match process () with
-    | Some v -> Stream (fun () -> Cons (v, memo process))
-    | None   -> Stream (fun () -> Nil)
+    let rec memo process =
+      match process () with
+      | Some v -> Stream (fun () -> Cons (v, memo process))
+      | None -> Stream (fun () -> Nil)
 
-  let fix f =
-    let r = ref (Stream (fun () -> raise BlackHole)) in
-    let t = Stream (fun () -> expose !r) in
-    r := f t; t
-end
+    let fix f =
+      let r = ref (Stream (fun () -> raise BlackHole)) in
+      let t = Stream (fun () -> expose !r) in
+      r := f t;
+      t
+  end
 
 module Examples = struct
-  module ProcessStream = MakeStream(Process)
+  module ProcessStream = MakeStream (Process)
 
   exception End
 
@@ -78,8 +84,10 @@ module Examples = struct
     let seed = ref start in
     let next () =
       match P.expose !seed with
-      | P.Cons (curr, next) -> seed := next; curr
-      | P.Nil               -> raise End
+      | P.Cons (curr, next) ->
+          seed := next;
+          curr
+      | P.Nil -> raise End
     in
     next
 end
