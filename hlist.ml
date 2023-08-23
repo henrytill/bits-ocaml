@@ -11,11 +11,10 @@ type (_, _) index =
   | S : ('xs, 'a) index -> ('x * 'xs, 'a) index
 
 let rec get : type a b. (a, b) index -> a t -> b =
- fun index l ->
-  match (index, l) with
-  | Z, HCons (h, _) -> h
-  | S e, HCons (_, t) -> get e t
-  | _, HNil -> .
+  fun index l -> match (index, l) with
+    | Z, HCons (h, _) -> h
+    | S e, HCons (_, t) -> get e t
+    | _, HNil -> .
 
 let rec length : type tys. tys t -> int = function
   | HNil -> 0

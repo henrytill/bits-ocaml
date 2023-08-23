@@ -45,32 +45,29 @@ module Process : PROCESS = struct
   let random () = Some (Random.int 127)
 end
 
-module MakeStream : STREAM_FUNCTOR =
-functor
-  (P : PROCESS)
-  ->
-  struct
-    type 'a t = Stream of (unit -> 'a front)
+module MakeStream : STREAM_FUNCTOR = functor (P : PROCESS) ->
+struct
+  type 'a t = Stream of (unit -> 'a front)
 
-    and 'a front =
-      | Nil
-      | Cons of 'a * 'a t
+  and 'a front =
+    | Nil
+    | Cons of 'a * 'a t
 
-    exception BlackHole
+  exception BlackHole
 
-    let expose (Stream d) = d ()
+  let expose (Stream d) = d ()
 
-    let rec memo process =
-      match process () with
-      | Some v -> Stream (fun () -> Cons (v, memo process))
-      | None -> Stream (fun () -> Nil)
+  let rec memo process =
+    match process () with
+    | Some v -> Stream (fun () -> Cons (v, memo process))
+    | None -> Stream (fun () -> Nil)
 
-    let fix f =
-      let r = ref (Stream (fun () -> raise BlackHole)) in
-      let t = Stream (fun () -> expose !r) in
-      r := f t;
-      t
-  end
+  let fix f =
+    let r = ref (Stream (fun () -> raise BlackHole)) in
+    let t = Stream (fun () -> expose !r) in
+    r := f t;
+    t
+end
 
 module Examples = struct
   module ProcessStream = MakeStream (Process)
