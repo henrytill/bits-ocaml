@@ -1,9 +1,10 @@
 (** "Landin's Knot" - implements recursion by backpatching *)
-let landins_knot : (('a -> 'b) -> 'a -> 'b) -> 'a -> 'b = fun f ->
-  let r = ref (fun x -> assert false) in
-  let fixedpoint = f (fun x -> !r x) in
-  r := fixedpoint;
-  fixedpoint
+let landins_knot : (('a -> 'b) -> 'a -> 'b) -> 'a -> 'b =
+  fun f ->
+    let r = ref (fun x -> assert false) in
+    let fixedpoint = f (fun x -> !r x) in
+    r := fixedpoint;
+    fixedpoint
 
 let factorial : int -> int =
   let f g x =
