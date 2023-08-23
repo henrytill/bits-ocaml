@@ -7,7 +7,8 @@ OCAMLMKTOP = ocamlmktop
 OCAMLOPT = ocamlopt
 OPAM = opam
 
-OPTCOMPFLAGS =
+OCAMLFLAGS =
+OCAMLOPTFLAGS =
 
 -include config.mk
 
@@ -21,16 +22,16 @@ all: $(BIN)
 delimcc_top: delimcc_tutorial.ml
 	$(OCAMLFIND) $(OCAMLMKTOP) -o $@ -linkpkg -package delimcc $<
 
-delimcc_test: OPTCOMPFLAGS += -w -58
+delimcc_test: OCAMLOPTFLAGS += -w -58
 delimcc_test: delimcc_tutorial.ml delimcc_test.ml
-	$(OCAMLFIND) $(OCAMLOPT) $(OPTCOMPFLAGS) -o $@ -linkpkg -package delimcc $^
+	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ -linkpkg -package delimcc $^
 
-readline: OPTCOMPFLAGS += -afl-instrument
+readline: OCAMLOPTFLAGS += -afl-instrument
 readline: readline.ml
 
 .SUFFIXES: .ml
 .ml:
-	$(OCAMLOPT) $(OPTCOMPFLAGS) -o $@ $<
+	$(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ $<
 
 input:
 	mkdir -p $@
@@ -45,7 +46,8 @@ fuzz: readline input/testcase
 .PHONY: clean
 clean:
 	rm -f $(BIN)
-	rm -f *.cmi *.cmx *.cmo *.o
+	rm -f *.cm[iox]
+	rm -f *.o
 
 ocaml-bits.export: FORCE
 	$(OPAM) switch export $@
