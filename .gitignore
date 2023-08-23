@@ -6,6 +6,7 @@ config.mk
 *.cmx
 *.cmo
 *.o
+a.out
 delimcc_test
 delimcc_top
 readline
