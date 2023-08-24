@@ -82,8 +82,8 @@ module Examples = struct
     let next () =
       match P.expose !seed with
       | P.Cons (curr, next) ->
-          seed := next;
-          curr
+        seed := next;
+        curr
       | P.Nil -> raise End
     in
     next

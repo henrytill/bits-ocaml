@@ -6,8 +6,8 @@ let rec unfoldr f seed =
 let schemeunfold isempty head tail seed =
   unfoldr
     (fun seed ->
-      if isempty seed then
-        None
-      else
-        Some (head seed, tail seed))
+       if isempty seed then
+         None
+       else
+         Some (head seed, tail seed))
     seed
