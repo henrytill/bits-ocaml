@@ -15,7 +15,12 @@ OCAMLOPTFLAGS =
 BIN =\
 	delimcc_test \
 	delimcc_top \
-	readline
+	readline \
+	sqlite_test
+
+STATIC_BIN =\
+	delimcc_test \
+	sqlite_test
 
 all: $(BIN)
 
@@ -28,6 +33,9 @@ delimcc_test: delimcc_tutorial.ml delimcc_test.ml
 
 readline: OCAMLOPTFLAGS += -afl-instrument
 readline: readline.ml
+
+sqlite_test: sqlite_test.ml
+	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ -linkpkg -package sqlite3 $^
 
 .SUFFIXES: .ml
 .ml:
@@ -48,6 +56,10 @@ clean:
 	rm -f $(BIN)
 	rm -f *.cm[iox]
 	rm -f *.o
+
+.PHONY: static
+static:
+	sh build-static-exe.sh $(STATIC_BIN)
 
 ocaml-bits.export: FORCE
 	$(OPAM) switch export $@
