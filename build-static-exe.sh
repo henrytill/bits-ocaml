@@ -20,20 +20,13 @@ create() {
 }
 
 copy() {
+    echo "Copying ${2}"
     docker cp -q "${1}:${DOCKER_BUILD_DIR}/${2}" "$(pwd)"
 }
 
 remove() {
-    docker remove "$1"
+    docker remove "$1" >/dev/null
 }
-
-check() {
-    printf '\n'
-    file "$1"
-    ./"$1"
-}
-
-make clean
 
 build "$TAG"
 
@@ -45,6 +38,4 @@ done
 
 remove "$cid"
 
-for file in $FILES; do
-    check "$file"
-done
+file $FILES

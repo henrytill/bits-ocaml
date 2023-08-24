@@ -58,7 +58,7 @@ clean:
 	rm -f *.o
 
 .PHONY: static
-static:
+static: clean
 	sh build-static-exe.sh $(STATIC_BIN)
 
 ocaml-bits.export: FORCE

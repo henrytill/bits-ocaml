@@ -1,3 +1,4 @@
 _opam
 .dockerignore
 Dockerfile
+build-static-exe.sh
