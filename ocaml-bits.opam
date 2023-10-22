@@ -1,0 +1,14 @@
+opam-version: "2.0"
+synopsis: "Some random bits of code"
+description: "Some random bits of code"
+maintainer: ["Henry Till <henrytill@gmail.com>"]
+authors: ["Henry Till <henrytill@gmail.com>"]
+homepage: "https://github.com/henrytill/ocaml-bits"
+bug-reports: "https://github.com/henrytill/ocaml-bits/issues"
+depends: [
+  "ocaml" {>= "4.14.0"}
+  "delimcc"
+  "sqlite3"
+]
+build: [make]
+dev-repo: "git+https://github.com/henrytill/ocaml-bits.git"
