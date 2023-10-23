@@ -61,6 +61,7 @@ install: delimcc_test sqlite_test
 
 .PHONY: clean
 clean:
+	rm -rf input output
 	rm -f $(BIN)
 	rm -f *.cm[iox]
 	rm -f *.o
