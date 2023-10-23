@@ -11,4 +11,5 @@ depends: [
   "sqlite3"
 ]
 build: [make]
+install: [make "PREFIX=%{prefix}%" "install"]
 dev-repo: "git+https://github.com/henrytill/ocaml-bits.git"

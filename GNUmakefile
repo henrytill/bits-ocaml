@@ -1,5 +1,7 @@
 .SUFFIXES:
 
+PREFIX = /usr/local
+
 FUZZ = afl-fuzz
 OCAMLC = ocamlc
 OCAMLFIND = ocamlfind
@@ -50,6 +52,12 @@ input/testcase: input
 .PHONY: fuzz
 fuzz: readline input/testcase
 	$(FUZZ) -m none -i input -o output ./readline
+
+.PHONY: install
+install: delimcc_test sqlite_test
+	mkdir -p $(PREFIX)/bin
+	install -m 755 delimcc_test $(PREFIX)/bin/delimcc_test
+	install -m 755 sqlite_test $(PREFIX)/bin/sqlite_test
 
 .PHONY: clean
 clean:
