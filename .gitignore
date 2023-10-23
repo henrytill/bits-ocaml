@@ -2,6 +2,7 @@ config.mk
 /_opam/
 /input/
 /output/
+/result*
 *.cmi
 *.cmx
 *.cmo
