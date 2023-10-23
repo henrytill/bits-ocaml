@@ -1,7 +1,7 @@
 {
   inputs = {
     opam-nix.url = "github:tweag/opam-nix";
-    nixpkgs.follows = "opam-nix/nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils = {
       url = "github:numtide/flake-utils";
       follows = "opam-nix/flake-utils";
