@@ -1,4 +1,4 @@
-let rec unfoldr f seed =
+let[@tail_mod_cons] rec unfoldr f seed =
   match f seed with
   | None -> []
   | Some (v, seed') -> v :: unfoldr f seed'
