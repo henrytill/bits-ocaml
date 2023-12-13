@@ -17,6 +17,7 @@ OCAMLOPTFLAGS =
 BIN =\
 	delimcc_test \
 	delimcc_top \
+	landins_knot \
 	readline \
 	sqlite_test
 
