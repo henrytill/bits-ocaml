@@ -7,13 +7,16 @@ let make_ops () =
 (* Section 2.1 *)
 module Exercise_01 = struct
   (* [2 * 3] : int *)
-  let no_01 = 5 * (2 * 3 + 3 * 4)
+  let no_01 = 5 * ((2 * 3) + (3 * 4))
 
   (* [2 = 3] : bool *)
   let no_02 = (if 2 = 3 then "hello" else "hi") ^ " world"
 
   (* [let x = 1] : int *)
-  let no_03 = fst (let x = 1 + 2 in (x, x))
+  let no_03 =
+    fst
+      (let x = 1 + 2 in
+       (x, x))
 
   (* [3 + 1] : int *)
   let no_04 = String.length ("x" ^ string_of_int (3 + 1))

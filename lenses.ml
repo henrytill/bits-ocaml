@@ -1,7 +1,5 @@
-(** Inspired by:
-    Darin Morrison's
-    {{: https://github.com/freebroccolo/ocaml-optics}{i ocaml-optics} library}
-*)
+(** Inspired by: Darin Morrison's
+    {{:https://github.com/freebroccolo/ocaml-optics} {i ocaml-optics} library} *)
 
 class type ['s, 't, 'a, 'b] lens = object
   method get : 's -> 'a
