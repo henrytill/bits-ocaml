@@ -6,7 +6,7 @@ let landins_knot (f : ('a -> 'b) -> 'a -> 'b) : 'a -> 'b =
   fixedpoint
 
 let factorial : int -> int =
-  let f g x =
+  let f (g : int -> int) (x : int) : int =
     if x = 0 then
       1
     else
