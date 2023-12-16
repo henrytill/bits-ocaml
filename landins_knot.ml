@@ -17,4 +17,5 @@ let factorial : int -> int =
 let () =
   let x = factorial 9 in
   assert (x = 362880);
-  print_int x
+  print_int x;
+  print_newline ()
