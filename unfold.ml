@@ -3,7 +3,7 @@ let[@tail_mod_cons] rec unfoldr f seed =
   | None -> []
   | Some (v, seed') -> v :: unfoldr f seed'
 
-let schemeunfold isempty head tail seed =
+let schemeunfold (isempty : 'a -> bool) (head : 'a -> 'b) (tail : 'a -> 'a) (seed : 'a) =
   unfoldr
     (fun seed ->
       if isempty seed then
