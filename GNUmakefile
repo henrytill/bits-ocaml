@@ -71,7 +71,4 @@ clean:
 static: clean
 	sh build-static-exe.sh $(STATIC_BIN)
 
-ocaml-bits.export: FORCE
-	$(OPAM) switch export $@
-
 FORCE:
