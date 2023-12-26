@@ -11,8 +11,8 @@ type (_, _) vec =
 (** map over a length-indexed vector, preserving length *)
 let rec map : type a b n. (a -> b) -> (a, n) vec -> (b, n) vec =
   fun f -> function
-  | Nil -> Nil
-  | Cons (a, l) -> Cons (f a, map f l)
+    | Nil -> Nil
+    | Cons (a, l) -> Cons (f a, map f l)
 
 (** head is exhaustive on vectors of length at least 1 *)
 let head : type a n. (a, n succ) vec -> a = function
