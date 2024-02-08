@@ -8,6 +8,7 @@ config.mk
 *.cmx
 *.cmo
 *.o
+.depend
 a.out
 delimcc_test
 delimcc_top
