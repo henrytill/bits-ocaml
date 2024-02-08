@@ -6,8 +6,8 @@ let[@tail_mod_cons] rec unfoldr f seed =
 let schemeunfold (isempty : 'a -> bool) (head : 'a -> 'b) (tail : 'a -> 'a) (seed : 'a) =
   unfoldr
     (fun seed ->
-       if isempty seed then
-         None
-       else
-         Some (head seed, tail seed))
+      if isempty seed then
+        None
+      else
+        Some (head seed, tail seed))
     seed
