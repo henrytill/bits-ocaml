@@ -4,13 +4,17 @@ PREFIX = /usr/local
 
 FUZZ = afl-fuzz
 OCAMLC = ocamlc
-OCAMLFIND = ocamlfind
-OCAMLMKTOP = ocamlmktop
 OCAMLOPT = ocamlopt
+OCAMLMKTOP = ocamlmktop
+OCAMLDEP = ocamldep
+OCAMLFIND = ocamlfind
 OPAM = opam
+
+INCLUDES =
 
 OCAMLFLAGS =
 OCAMLOPTFLAGS =
+OCAMLFINDFLAGS =
 
 -include config.mk
 
@@ -27,18 +31,33 @@ STATIC_BIN =\
 
 all: $(BIN)
 
-delimcc_top: delimcc_tutorial.ml
-	$(OCAMLFIND) $(OCAMLMKTOP) -o $@ -linkpkg -package delimcc $<
+.SUFFIXES: .mli .cmi
+.mli.cmi:
+	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ $<
+
+.SUFFIXES: .ml .cmo
+.ml.cmo:
+	$(OCAMLFIND) $(OCAMLC) $(OCAMLOPTFLAGS) -c $(OCAMLFINDFLAGS) $<
+
+.SUFFIXES: .ml .cmx
+.ml.cmx:
+	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -c $(OCAMLFINDFLAGS) $<
 
 delimcc_test: OCAMLOPTFLAGS += -w -58
-delimcc_test: delimcc_tutorial.ml delimcc_test.ml
-	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ -linkpkg -package delimcc $^
+delimcc_test: OCAMLFINDFLAGS += -linkpkg -package delimcc
+delimcc_test: delimcc_tutorial.cmx delimcc_test.cmx
+	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
+delimcc_top: OCAMLFINDFLAGS += -linkpkg -package delimcc
+delimcc_top: delimcc_tutorial.cmo
+	$(OCAMLFIND) $(OCAMLMKTOP) -o $@ $(OCAMLFINDFLAGS) $<
 
 readline: OCAMLOPTFLAGS += -afl-instrument
 readline: readline.ml
 
-sqlite_test: sqlite_test.ml
-	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ -linkpkg -package sqlite3 $^
+sqlite_test: OCAMLFINDFLAGS += -linkpkg -package sqlite3
+sqlite_test: sqlite_test.cmx
+	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
 
 .SUFFIXES: .ml
 .ml:
@@ -70,5 +89,10 @@ clean:
 .PHONY: static
 static: clean
 	sh build-static-exe.sh $(STATIC_BIN)
+
+.depend: *.mli *.ml GNUmakefile
+	$(OCAMLDEP) $(INCLUDES) *.mli *.ml > .depend
+
+include .depend
 
 FORCE:
