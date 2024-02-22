@@ -22,6 +22,7 @@ BIN =\
 	delimcc_test \
 	delimcc_top \
 	landins_knot \
+	lenses \
 	readline \
 	sqlite_test
 
