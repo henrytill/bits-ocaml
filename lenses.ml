@@ -59,10 +59,11 @@ let postcode : (address, string) lens' =
   end
 
 (* Example *)
+
 let () =
   let fred_postcode = get fred (compose addr postcode) in
-  let set_postcode = set (compose addr postcode) in
   print_endline ("Fred's postcode: " ^ fred_postcode);
-  let new_fred = set_postcode "55555" fred in
-  let fred_postcode = get new_fred (compose addr postcode) in
+  let set_postcode = set (compose addr postcode) in
+  let fred = set_postcode "55555" fred in
+  let fred_postcode = get fred (compose addr postcode) in
   print_endline ("Fred's updated postcode: " ^ fred_postcode)
