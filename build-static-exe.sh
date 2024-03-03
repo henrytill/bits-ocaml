@@ -7,7 +7,7 @@ TAG=${TAG:-ocaml-bits:latest}
 DOCKER_BUILD_DIR=${DOCKER_BUILD_DIR:-/home/build/ocaml-bits}
 
 if [ -z "$FILES" ]; then
-    echo "Usage: sh ${0} <file1> <file2> ..."
+    echo "Usage: sh ${0} <file1> <file2> ..." >&2
     exit 1
 fi
 
