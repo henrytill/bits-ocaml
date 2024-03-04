@@ -1,0 +1,33 @@
+module type INTRO = sig
+  type t
+
+  val pp : Format.formatter -> t -> unit
+  val to_string : t -> string
+  val const : int -> t
+  val var : string -> t
+  val ( + ) : t -> t -> t
+  val ( * ) : t -> t -> t
+end
+
+module Intro : INTRO = struct
+  type t =
+    | Var of string
+    | Const of int
+    | Add of t * t
+    | Mul of t * t
+
+  let rec pp fmt x =
+    let open Format in
+    match x with
+    | Var a -> fprintf fmt "@[Var %S@]" a
+    | Const a -> fprintf fmt "@[Const %d@]" a
+    | Add (a, b) -> fprintf fmt "@[Add (%a, %a)@]" pp a pp b
+    | Mul (a, b) -> fprintf fmt "@[Mul (%a, %a)@]" pp a pp b
+
+  let show a = Format.asprintf "%a" pp a
+  let to_string = show
+  let const i = Const i
+  let var s = Var s
+  let ( + ) x y = Add (x, y)
+  let ( * ) x y = Mul (x, y)
+end
