@@ -1,6 +1,7 @@
 module type INTRO = sig
   type t
 
+  val equal : t -> t -> bool
   val pp : Format.formatter -> t -> unit
   val to_string : t -> string
   val const : int -> t
@@ -15,6 +16,14 @@ module Intro : INTRO = struct
     | Const of int
     | Add of t * t
     | Mul of t * t
+
+  let rec equal x y =
+    match (x, y) with
+    | Var a, Var b -> a = b
+    | Const a, Const b -> a = b
+    | Add (a1, a2), Add (b1, b2) -> equal a1 b1 && equal a2 b2
+    | Mul (a1, a2), Mul (b1, b2) -> equal a1 b1 && equal a2 b2
+    | _, _ -> false
 
   let rec pp fmt x =
     let open Format in
