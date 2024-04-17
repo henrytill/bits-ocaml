@@ -19,8 +19,8 @@ module Intro : INTRO = struct
 
   let rec equal x y =
     match (x, y) with
-    | Var a, Var b -> a = b
-    | Const a, Const b -> a = b
+    | Var a, Var b -> String.equal a b
+    | Const a, Const b -> Int.equal a b
     | Add (a1, a2), Add (b1, b2) -> equal a1 b1 && equal a2 b2
     | Mul (a1, a2), Mul (b1, b2) -> equal a1 b1 && equal a2 b2
     | _, _ -> false
@@ -33,7 +33,7 @@ module Intro : INTRO = struct
     | Add (a, b) -> fprintf fmt "@[Add (%a, %a)@]" pp a pp b
     | Mul (a, b) -> fprintf fmt "@[Mul (%a, %a)@]" pp a pp b
 
-  let show a = Format.asprintf "%a" pp a
+  let show = Format.asprintf "%a" pp
   let to_string = show
   let const i = Const i
   let var s = Var s
