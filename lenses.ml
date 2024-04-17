@@ -60,10 +60,12 @@ let postcode : (address, string) lens' =
 
 (* Example *)
 
-let () =
+let run_example () =
   let fred_postcode = get fred (compose addr postcode) in
   print_endline ("Fred's postcode: " ^ fred_postcode);
   let set_postcode = set (compose addr postcode) in
   let fred = set_postcode "55555" fred in
   let fred_postcode = get fred (compose addr postcode) in
   print_endline ("Fred's updated postcode: " ^ fred_postcode)
+
+let () = run_example ()
