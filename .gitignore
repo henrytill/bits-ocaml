@@ -12,6 +12,7 @@ config.mk
 a.out
 delimcc_test
 delimcc_top
+hlist_test
 landins_knot
 lenses
 readline

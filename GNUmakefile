@@ -19,6 +19,7 @@ OCAMLFINDFLAGS =
 BIN =
 BIN += delimcc_test
 BIN += delimcc_top
+BIN += hlist_test
 BIN += landins_knot
 BIN += lenses
 BIN += readline
@@ -52,6 +53,9 @@ delimcc_test: delimcc_tutorial.cmx delimcc_test.cmx
 delimcc_top: OCAMLFINDFLAGS += -linkpkg -package delimcc
 delimcc_top: delimcc_tutorial.cmo
 	$(OCAMLFIND) $(OCAMLMKTOP) -o $@ $(OCAMLFINDFLAGS) $<
+
+hlist_test: hlist.cmx hlist_test.cmx
+	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
 
 readline: OCAMLOPTFLAGS += -afl-instrument
 readline: readline.ml

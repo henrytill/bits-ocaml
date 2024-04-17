@@ -21,15 +21,8 @@ let rec length : type tys. tys t -> int = function
   | HNil -> 0
   | HCons (_, t) -> 1 + length t
 
-let hhead = function
+let head = function
   | HCons (h, _) -> h
 
-let htail = function
+let tail = function
   | HCons (_, t) -> t
-
-module Examples = struct
-  let x = HCons (3, HCons ("str", HCons (35.0, HNil)))
-  let a = get Z x
-  let b = get (S Z) x
-  let c = get (S (S Z)) x
-end
