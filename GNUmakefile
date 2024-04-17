@@ -16,19 +16,19 @@ OCAMLFLAGS =
 OCAMLOPTFLAGS = -g
 OCAMLFINDFLAGS =
 
+BIN =
+BIN += delimcc_test
+BIN += delimcc_top
+BIN += landins_knot
+BIN += lenses
+BIN += readline
+BIN += sqlite_test
+
+STATIC_BIN =
+STATIC_BIN += delimcc_test
+STATIC_BIN += sqlite_test
+
 -include config.mk
-
-BIN =\
-	delimcc_test \
-	delimcc_top \
-	landins_knot \
-	lenses \
-	readline \
-	sqlite_test
-
-STATIC_BIN =\
-	delimcc_test \
-	sqlite_test
 
 all: $(BIN)
 
@@ -92,7 +92,7 @@ static: clean
 	sh build-static-exe.sh $(STATIC_BIN)
 
 .depend: *.mli *.ml GNUmakefile
-	$(OCAMLDEP) $(INCLUDES) *.mli *.ml > .depend
+	$(OCAMLDEP) $(INCLUDES) *.mli *.ml > $@
 
 include .depend
 
