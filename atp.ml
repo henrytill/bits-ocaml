@@ -1,4 +1,4 @@
-module type INTRO = sig
+module Intro : sig
   type t
 
   val equal : t -> t -> bool
@@ -8,9 +8,7 @@ module type INTRO = sig
   val var : string -> t
   val ( + ) : t -> t -> t
   val ( * ) : t -> t -> t
-end
-
-module Intro : INTRO = struct
+end = struct
   type t =
     | Var of string
     | Const of int
