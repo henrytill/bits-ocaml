@@ -48,12 +48,7 @@ TESTS += test/landins_knot_test.byte
 TESTS += test/lenses_test.byte
 TESTS += test/sqlite_test.byte
 
-TESTS_OPT =
-TESTS_OPT += test/delimcc_test.exe
-TESTS_OPT += test/hlist_test.exe
-TESTS_OPT += test/landins_knot_test.exe
-TESTS_OPT += test/lenses_test.exe
-TESTS_OPT += test/sqlite_test.exe
+TESTS_OPT = $(TESTS:.byte=.exe)
 
 INCLUDES = -I src
 
