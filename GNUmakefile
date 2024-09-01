@@ -44,11 +44,15 @@ SRC_MLS = $(SRC_CMOS:.cmo=.ml)
 TESTS =
 TESTS += test/delimcc_test.byte
 TESTS += test/hlist_test.byte
+TESTS += test/landins_knot_test.byte
+TESTS += test/lenses_test.byte
 TESTS += test/sqlite_test.byte
 
 TESTS_OPT =
 TESTS_OPT += test/delimcc_test.exe
 TESTS_OPT += test/hlist_test.exe
+TESTS_OPT += test/landins_knot_test.exe
+TESTS_OPT += test/lenses_test.exe
 TESTS_OPT += test/sqlite_test.exe
 
 INCLUDES = -I src
@@ -96,6 +100,18 @@ test/hlist_test.byte: src/hlist.cmo test/hlist_test.ml
 test/hlist_test.exe: src/hlist.cmx test/hlist_test.ml
 	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
 
+test/landins_knot_test.byte: src/landins_knot.cmo test/landins_knot_test.ml
+	$(OCAMLFIND) $(OCAMLC) $(ALL_OCAMLCFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
+test/landins_knot_test.exe: src/landins_knot.cmx test/landins_knot_test.ml
+	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
+test/lenses_test.byte: src/lenses.cmo test/lenses_test.ml
+	$(OCAMLFIND) $(OCAMLC) $(ALL_OCAMLCFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
+test/lenses_test.exe: src/lenses.cmx test/lenses_test.ml
+	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
 test/sqlite_test.%: OCAMLFINDFLAGS += -linkpkg -package sqlite3
 
 test/sqlite_test.byte: test/sqlite_test.ml
@@ -124,6 +140,7 @@ $(DESTDIR)$(bindir):
 install: $(TESTS_OPT) | $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) test/delimcc_test.exe $(DESTDIR)$(bindir)/delimcc_test.exe
 	$(INSTALL_PROGRAM) test/hlist_test.exe $(DESTDIR)$(bindir)/hlist_test.exe
+	$(INSTALL_PROGRAM) test/landins_knot_test.exe $(DESTDIR)$(bindir)/landins_knot_test.exe
 	$(INSTALL_PROGRAM) test/sqlite_test.exe $(DESTDIR)$(bindir)/sqlite_test.exe
 
 .PHONY: clean

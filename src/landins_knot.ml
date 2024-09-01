@@ -13,9 +13,3 @@ let factorial : int -> int =
       x * g (x - 1)
   in
   landins_knot f
-
-let () =
-  let x = factorial 9 in
-  assert (x = 362880);
-  print_int x;
-  print_newline ()
