@@ -47,6 +47,7 @@ TESTS += test/hlist_test.byte
 TESTS += test/landins_knot_test.byte
 TESTS += test/lenses_test.byte
 TESTS += test/sqlite_test.byte
+TESTS += test/views_test.byte
 
 TESTS_OPT = $(TESTS:.byte=.exe)
 
@@ -115,6 +116,12 @@ test/sqlite_test.byte: test/sqlite_test.ml
 test/sqlite_test.exe: test/sqlite_test.ml
 	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
 
+test/views_test.byte: src/views.cmo test/views_test.ml
+	$(OCAMLFIND) $(OCAMLC) $(ALL_OCAMLCFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
+test/views_test.exe: src/views.cmx test/views_test.ml
+	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
 # readline: OCAMLOPTFLAGS += -afl-instrument
 # readline: readline.ml
 
@@ -137,6 +144,7 @@ install: $(TESTS_OPT) | $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) test/hlist_test.exe $(DESTDIR)$(bindir)/hlist_test.exe
 	$(INSTALL_PROGRAM) test/landins_knot_test.exe $(DESTDIR)$(bindir)/landins_knot_test.exe
 	$(INSTALL_PROGRAM) test/sqlite_test.exe $(DESTDIR)$(bindir)/sqlite_test.exe
+	$(INSTALL_PROGRAM) test/views_test.exe $(DESTDIR)$(bindir)/views_test.exe
 
 .PHONY: clean
 clean:
