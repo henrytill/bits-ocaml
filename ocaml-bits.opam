@@ -10,6 +10,9 @@ depends: [
   "delimcc"
   "sqlite3"
 ]
-build: [make]
-install: [make "DESTDIR=%{prefix}%" "install"]
+build: [
+  ["./configure" "-d" "_build"]
+  [make "-C" "_build" "all"]
+]
+install: [make "-C" "_build" "DESTDIR=%{prefix}%" "install"]
 dev-repo: "git+https://github.com/henrytill/ocaml-bits.git"

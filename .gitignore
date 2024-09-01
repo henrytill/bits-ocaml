@@ -13,3 +13,5 @@ config.mk
 *.exe
 *.byte
 .depend
+.merlin
+/_build
