@@ -12,11 +12,11 @@ type (_, _) vec =
 let rec map : type a b n. (a -> b) -> (a, n) vec -> (b, n) vec =
   fun f -> function
   | Nil -> Nil
-  | Cons (a, l) -> Cons (f a, map f l)
+  | Cons (x, xs) -> Cons (f x, map f xs)
 
 (** head is exhaustive on vectors of length at least 1 *)
 let head : type a n. (a, n succ) vec -> a = function
-  | Cons (a, _) -> a
+  | Cons (x, _) -> x
 
 (** equality witness *)
 type (_, _) eq = Refl : ('a, 'a) eq
