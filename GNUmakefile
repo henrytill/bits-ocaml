@@ -1,103 +1,141 @@
 .SUFFIXES:
 
-PREFIX = /usr/local
-
 FUZZ = afl-fuzz
 OCAMLC = ocamlc
 OCAMLOPT = ocamlopt
-OCAMLMKTOP = ocamlmktop
 OCAMLDEP = ocamldep
 OCAMLFIND = ocamlfind
-OPAM = opam
 
-INCLUDES =
+INSTALL = install
+INSTALL_PROGRAM = $(INSTALL)
+INSTALL_DATA = $(INSTALL) -m 644
 
-OCAMLFLAGS =
-OCAMLOPTFLAGS = -g
+OCAMLCFLAGS = -bin-annot -g
+OCAMLOPTFLAGS = -bin-annot -g
 OCAMLFINDFLAGS =
 
-BIN =
-BIN += delimcc_test
-BIN += delimcc_top
-BIN += hlist_test
-BIN += landins_knot
-BIN += lenses
-BIN += readline
-BIN += sqlite_test
+INCLUDES =
+ALL_OCAMLCFLAGS = $(INCLUDES) $(OCAMLCFLAGS)
+ALL_OCAMLOPTFLAGS = $(INCLUDES) $(OCAMLOPTFLAGS)
 
-STATIC_BIN =
-STATIC_BIN += delimcc_test
-STATIC_BIN += sqlite_test
+bindir = /bin
+prefix = /usr/local
+DESTDIR = $(prefix)
+
+SRC_CMOS =
+SRC_CMOS += src/atp.cmo
+SRC_CMOS += src/defunctionalization.cmo
+SRC_CMOS += src/delimcc_tutorial.cmo
+SRC_CMOS += src/gadt_fun.cmo
+SRC_CMOS += src/hlist.cmo
+SRC_CMOS += src/landins_knot.cmo
+SRC_CMOS += src/lenses.cmo
+SRC_CMOS += src/listing.cmo
+SRC_CMOS += src/readline.cmo
+SRC_CMOS += src/static_cap.cmo
+SRC_CMOS += src/unfold.cmo
+SRC_CMOS += src/views.cmo
+
+SRC_CMXS = $(SRC_CMOS:.cmo=.cmx)
+
+SRC_MLIS = src/delimcc_tutorial.mli
+SRC_MLS = $(SRC_CMOS:.cmo=.ml)
+
+TESTS =
+TESTS += test/delimcc_test.byte
+TESTS += test/hlist_test.byte
+TESTS += test/sqlite_test.byte
+
+TESTS_OPT =
+TESTS_OPT += test/delimcc_test.exe
+TESTS_OPT += test/hlist_test.exe
+TESTS_OPT += test/sqlite_test.exe
+
+INCLUDES = -I src
 
 -include config.mk
 
-all: $(BIN)
+.PHONY: all
+all: byte opt
+
+.PHONY: byte
+byte: $(SRC_CMOS) $(TESTS)
+
+.PHONY: opt
+opt: $(SRC_CMXS) $(TESTS_OPT)
 
 .SUFFIXES: .mli .cmi
 .mli.cmi:
-	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ $<
+	$(OCAMLFIND) $(OCAMLC) $(ALL_OCAMLCFLAGS) -c $(OCAMLFINDFLAGS) $<
 
 .SUFFIXES: .ml .cmo
 .ml.cmo:
-	$(OCAMLFIND) $(OCAMLC) $(OCAMLOPTFLAGS) -c $(OCAMLFINDFLAGS) $<
+	$(OCAMLFIND) $(OCAMLC) $(ALL_OCAMLCFLAGS) -c $(OCAMLFINDFLAGS) $<
 
 .SUFFIXES: .ml .cmx
 .ml.cmx:
-	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -c $(OCAMLFINDFLAGS) $<
+	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -c $(OCAMLFINDFLAGS) $<
 
-delimcc_test: OCAMLOPTFLAGS += -w -58
-delimcc_test: OCAMLFINDFLAGS += -linkpkg -package delimcc
-delimcc_test: delimcc_tutorial.cmx delimcc_test.cmx
-	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+src/delimcc_tutorial.cmo: OCAMLFINDFLAGS += -linkpkg -package delimcc
+src/delimcc_tutorial.cmx: OCAMLFINDFLAGS += -linkpkg -package delimcc
+src/delimcc_tutorial.cmx: OCAMLOPTFLAGS += -w -58
 
-delimcc_top: OCAMLFINDFLAGS += -linkpkg -package delimcc
-delimcc_top: delimcc_tutorial.cmo
-	$(OCAMLFIND) $(OCAMLMKTOP) -o $@ $(OCAMLFINDFLAGS) $<
+# test
 
-hlist_test: hlist.cmx hlist_test.cmx
-	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+test/delimcc_test.%: OCAMLFINDFLAGS += -linkpkg -package delimcc
 
-readline: OCAMLOPTFLAGS += -afl-instrument
-readline: readline.ml
+test/delimcc_test.byte: src/delimcc_tutorial.cmo test/delimcc_test.ml
+	$(OCAMLFIND) $(OCAMLC) $(ALL_OCAMLCFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
 
-sqlite_test: OCAMLFINDFLAGS += -linkpkg -package sqlite3
-sqlite_test: sqlite_test.cmx
-	$(OCAMLFIND) $(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+test/delimcc_test.exe: src/delimcc_tutorial.cmx test/delimcc_test.ml
+	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
 
-.SUFFIXES: .ml
-.ml:
-	$(OCAMLOPT) $(OCAMLOPTFLAGS) -o $@ $<
+test/hlist_test.byte: src/hlist.cmo test/hlist_test.ml
+	$(OCAMLFIND) $(OCAMLC) $(ALL_OCAMLCFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
 
-input:
+test/hlist_test.exe: src/hlist.cmx test/hlist_test.ml
+	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
+test/sqlite_test.%: OCAMLFINDFLAGS += -linkpkg -package sqlite3
+
+test/sqlite_test.byte: test/sqlite_test.ml
+	$(OCAMLFIND) $(OCAMLC) $(ALL_OCAMLCFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
+test/sqlite_test.exe: test/sqlite_test.ml
+	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
+# readline: OCAMLOPTFLAGS += -afl-instrument
+# readline: readline.ml
+
+# input:
+# 	mkdir -p $@
+
+# input/testcase: | input
+# 	echo asdf > $@
+
+# .PHONY: fuzz
+# fuzz: readline input/testcase
+# 	$(FUZZ) -m none -i input -o output ./readline
+
+$(DESTDIR)$(bindir):
 	mkdir -p $@
 
-input/testcase: input
-	echo asdf > $@
-
-.PHONY: fuzz
-fuzz: readline input/testcase
-	$(FUZZ) -m none -i input -o output ./readline
-
 .PHONY: install
-install: delimcc_test sqlite_test
-	mkdir -p $(PREFIX)/bin
-	install -m 755 delimcc_test $(PREFIX)/bin/delimcc_test
-	install -m 755 sqlite_test $(PREFIX)/bin/sqlite_test
+install: $(TESTS_OPT) | $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) test/delimcc_test.exe $(DESTDIR)$(bindir)/delimcc_test.exe
+	$(INSTALL_PROGRAM) test/hlist_test.exe $(DESTDIR)$(bindir)/hlist_test.exe
+	$(INSTALL_PROGRAM) test/sqlite_test.exe $(DESTDIR)$(bindir)/sqlite_test.exe
 
 .PHONY: clean
 clean:
-	rm -rf input output
-	rm -f $(BIN)
-	rm -f *.cm[iox]
-	rm -f *.o
+	rm -f $(SRC_CMOS) $(SRC_CMOS:.cmo=.cmi)
+	rm -f $(SRC_CMOS:.cmo=.cmt) $(SRC_MLIS:.mli=.cmti)
+	rm -f $(SRC_CMXS) $(SRC_CMXS:.cmx=.o)
+	rm -f $(TESTS) $(TESTS_OPT)
+	rm -f $(TESTS:.byte=.cmi) $(TESTS:.byte=.cmo) $(TESTS:.byte=.cmt)
+	rm -f $(TESTS_OPT:.exe=.cmx) $(TESTS_OPT:.exe=.o)
 
-.PHONY: static
-static: clean
-	sh build-static-exe.sh $(STATIC_BIN)
-
-.depend: *.mli *.ml GNUmakefile
-	$(OCAMLDEP) $(INCLUDES) *.mli *.ml > $@
+.depend: GNUmakefile $(SRC_MLIS) $(SRC_MLS)
+	$(OCAMLDEP) $(INCLUDES) $(SRC_MLIS) $(SRC_MLS) > $@
 
 include .depend
-
-FORCE:

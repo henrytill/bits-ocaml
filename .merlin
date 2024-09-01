@@ -1,1 +1,5 @@
+S src
+S test
+B src
+B test
 PKG delimcc sqlite3

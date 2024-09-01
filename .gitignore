@@ -7,13 +7,9 @@ config.mk
 *.cmi
 *.cmx
 *.cmo
+*.cmt
+*.cmti
 *.o
+*.exe
+*.byte
 .depend
-a.out
-delimcc_test
-delimcc_top
-hlist_test
-landins_knot
-lenses
-readline
-sqlite_test
