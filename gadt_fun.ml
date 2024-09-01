@@ -18,6 +18,11 @@ let rec map : type a b n. (a -> b) -> (a, n) vec -> (b, n) vec =
 let head : type a n. (a, n succ) vec -> a = function
   | Cons (x, _) -> x
 
+(** last is exhaustive on vectors of length at least 1 *)
+let rec last : type a n. (a, n succ) vec -> a = function
+  | Cons (x, Nil) -> x
+  | Cons (_, (Cons (_, _) as xs)) -> last xs
+
 (** equality witness *)
 type (_, _) eq = Refl : ('a, 'a) eq
 
