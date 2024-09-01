@@ -19,7 +19,7 @@ module type SAFE_ARRAY = sig
   val previous : 's index -> 's index -> 's index option
 end
 
-module SafeArray : SAFE_ARRAY = struct
+module Safe_array : SAFE_ARRAY = struct
   type ('s, 'a) t = 'a array
   type 's index = int
 
@@ -63,7 +63,7 @@ module SafeArray : SAFE_ARRAY = struct
 end
 
 let bsearch cmp arr v =
-  let open SafeArray in
+  let open Safe_array in
   let rec look barr low high =
     let mid = middle low high in
     let x = get barr mid in

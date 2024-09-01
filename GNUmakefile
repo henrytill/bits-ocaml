@@ -32,7 +32,7 @@ SRC_CMOS += src/landins_knot.cmo
 SRC_CMOS += src/lenses.cmo
 SRC_CMOS += src/listing.cmo
 SRC_CMOS += src/readline.cmo
-SRC_CMOS += src/static_cap.cmo
+SRC_CMOS += src/safe_array.cmo
 SRC_CMOS += src/unfold.cmo
 SRC_CMOS += src/views.cmo
 
