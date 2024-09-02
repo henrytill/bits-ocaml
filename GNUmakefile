@@ -31,7 +31,6 @@ SRC_CMOS += src/hlist.cmo
 SRC_CMOS += src/landins_knot.cmo
 SRC_CMOS += src/lenses.cmo
 SRC_CMOS += src/listing.cmo
-SRC_CMOS += src/readline.cmo
 SRC_CMOS += src/safe_array.cmo
 SRC_CMOS += src/unfold.cmo
 SRC_CMOS += src/views.cmo
@@ -46,6 +45,7 @@ TESTS += test/delimcc_test.byte
 TESTS += test/hlist_test.byte
 TESTS += test/landins_knot_test.byte
 TESTS += test/lenses_test.byte
+TESTS += test/readline_test.byte
 TESTS += test/sqlite_test.byte
 TESTS += test/views_test.byte
 
@@ -108,6 +108,13 @@ test/lenses_test.byte: src/lenses.cmo test/lenses_test.ml
 test/lenses_test.exe: src/lenses.cmx test/lenses_test.ml
 	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
 
+test/readline_test.byte: test/readline_test.ml
+	$(OCAMLFIND) $(OCAMLC) $(ALL_OCAMLCFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
+test/readline_test.exe: OCAMLOPTFLAGS += -afl-instrument
+test/readline_test.exe: test/readline_test.ml
+	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
 test/sqlite_test.%: OCAMLFINDFLAGS += -linkpkg -package sqlite3
 
 test/sqlite_test.byte: test/sqlite_test.ml
@@ -122,18 +129,15 @@ test/views_test.byte: src/views.cmo test/views_test.ml
 test/views_test.exe: src/views.cmx test/views_test.ml
 	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
 
-# readline: OCAMLOPTFLAGS += -afl-instrument
-# readline: readline.ml
+input:
+	mkdir -p $@
 
-# input:
-# 	mkdir -p $@
+input/testcase: | input
+	echo asdf > $@
 
-# input/testcase: | input
-# 	echo asdf > $@
-
-# .PHONY: fuzz
-# fuzz: readline input/testcase
-# 	$(FUZZ) -m none -i input -o output ./readline
+.PHONY: fuzz
+fuzz: test/readline_test.exe input/testcase
+	$(FUZZ) -m none -i input -o output ./$<
 
 $(DESTDIR)$(bindir):
 	mkdir -p $@
