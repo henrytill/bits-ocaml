@@ -8,7 +8,7 @@ bug-reports: "https://github.com/henrytill/ocaml-bits/issues"
 depends: [
   "ocaml" {>= "4.14.0"}
   "delimcc"
-  "sqlite3"
+  "sqlite3" {>= "5.0.0"}
 ]
 build: [
   ["./configure" "-d" "_build"]
