@@ -23,7 +23,7 @@ prefix = /usr/local
 DESTDIR = $(prefix)
 
 SRC_CMOS =
-SRC_CMOS += src/atp.cmo
+SRC_CMOS += src/calc.cmo
 SRC_CMOS += src/defunctionalization.cmo
 SRC_CMOS += src/delimcc_tutorial.cmo
 SRC_CMOS += src/gadt_fun.cmo
