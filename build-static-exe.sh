@@ -21,7 +21,7 @@ create() {
 
 copy() {
   echo "Copying ${2}"
-  docker cp -q "${1}:${DOCKER_BUILD_DIR}/${2}" "$(pwd)"
+  docker cp -q "${1}:${DOCKER_BUILD_DIR}/${2}" "$(pwd)/_static/${2}"
 }
 
 remove() {
@@ -32,10 +32,11 @@ build "$TAG"
 
 cid="$(create "$TAG")"
 
+mkdir -p _static/src
+mkdir -p _static/test
+
 for file in $FILES; do
   copy "$cid" "$file"
 done
 
 remove "$cid"
-
-file $FILES

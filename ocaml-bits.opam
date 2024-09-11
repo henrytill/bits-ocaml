@@ -7,6 +7,7 @@ homepage: "https://github.com/henrytill/ocaml-bits"
 bug-reports: "https://github.com/henrytill/ocaml-bits/issues"
 depends: [
   "ocaml" {>= "4.14.0"}
+  "ocamlfind"
   "delimcc"
   "sqlite3" {>= "5.0.0"}
 ]
