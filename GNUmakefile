@@ -47,6 +47,7 @@ TESTS += test/landins_knot_test.byte
 TESTS += test/lenses_test.byte
 TESTS += test/readline_test.byte
 TESTS += test/sqlite_test.byte
+TESTS += test/timestamp.byte
 TESTS += test/views_test.byte
 
 TESTS_OPT = $(TESTS:.byte=.exe)
@@ -121,6 +122,14 @@ test/sqlite_test.byte: test/sqlite_test.ml
 	$(OCAMLFIND) $(OCAMLC) $(ALL_OCAMLCFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
 
 test/sqlite_test.exe: test/sqlite_test.ml
+	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
+test/timestamp.byte: ALL_OCAMLCFLAGS += -I +unix unix.cma
+test/timestamp.byte: test/timestamp.ml
+	$(OCAMLFIND) $(OCAMLC) $(ALL_OCAMLCFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
+
+test/timestamp.exe: ALL_OCAMLOPTFLAGS += -I +unix unix.cmxa
+test/timestamp.exe: test/timestamp.ml
 	$(OCAMLFIND) $(OCAMLOPT) $(ALL_OCAMLOPTFLAGS) -o $@ $(OCAMLFINDFLAGS) $^
 
 test/views_test.byte: src/views.cmo test/views_test.ml
