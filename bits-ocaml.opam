@@ -3,8 +3,8 @@ synopsis: "Some random bits of code"
 description: "Some random bits of code"
 maintainer: ["Henry Till <henrytill@gmail.com>"]
 authors: ["Henry Till <henrytill@gmail.com>"]
-homepage: "https://github.com/henrytill/ocaml-bits"
-bug-reports: "https://github.com/henrytill/ocaml-bits/issues"
+homepage: "https://github.com/henrytill/bits-ocaml"
+bug-reports: "https://github.com/henrytill/bits-ocaml/issues"
 depends: [
   "ocaml" {>= "4.14.0"}
   "ocamlfind"
@@ -16,4 +16,4 @@ build: [
   [make "-C" "_build" "all"]
 ]
 install: [make "-C" "_build" "DESTDIR=%{prefix}%" "install"]
-dev-repo: "git+https://github.com/henrytill/ocaml-bits.git"
+dev-repo: "git+https://github.com/henrytill/bits-ocaml.git"

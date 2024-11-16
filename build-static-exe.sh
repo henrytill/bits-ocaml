@@ -3,8 +3,8 @@
 set -e
 
 FILES="$@"
-TAG=${TAG:-ocaml-bits:latest}
-DOCKER_BUILD_DIR=${DOCKER_BUILD_DIR:-/home/build/ocaml-bits}
+TAG=${TAG:-bits-ocaml:latest}
+DOCKER_BUILD_DIR=${DOCKER_BUILD_DIR:-/home/build/bits-ocaml}
 
 if [ -z "$FILES" ]; then
   echo "Usage: sh ${0} <file1> <file2> ..." >&2

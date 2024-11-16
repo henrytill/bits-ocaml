@@ -12,15 +12,15 @@ WORKDIR /home/build
 
 RUN opam init --disable-sandboxing --auto-setup -q -c $DEFAULT_SWITCH
 
-RUN mkdir -p /home/build/ocaml-bits
+RUN mkdir -p /home/build/bits-ocaml
 
-WORKDIR /home/build/ocaml-bits
+WORKDIR /home/build/bits-ocaml
 
-COPY --chown=build:build ocaml-bits.opam /home/build/ocaml-bits/
+COPY --chown=build:build bits-ocaml.opam /home/build/bits-ocaml/
 
 RUN opam install -yq . --deps-only --no-depexts
 
-COPY --chown=build:build . /home/build/ocaml-bits/
+COPY --chown=build:build . /home/build/bits-ocaml/
 
 RUN opam exec -- ./configure
 

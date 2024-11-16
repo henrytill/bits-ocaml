@@ -22,7 +22,7 @@
     }@inputs:
     # Don't forget to put the package name instead of `throw':
     let
-      package = "ocaml-bits";
+      package = "bits-ocaml";
     in
     flake-utils.lib.eachDefaultSystem (
       system:
