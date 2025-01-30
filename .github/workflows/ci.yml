@@ -8,10 +8,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  flake:
+  linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@main
-      - uses: DeterminateSystems/magic-nix-cache-action@main
-      - run: nix build
+      - uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: 4.14
+          dune-cache: true
+      - run: sudo apt-get install -yqq --no-install-recommends libsqlite3-dev
+      - run: opam install . --deps-only --with-test
+      - run: opam exec -- ./configure -d _build
+      - run: opam exec -- make -C _build
