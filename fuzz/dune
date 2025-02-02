@@ -1,0 +1,15 @@
+(executable
+ (name readline_test))
+
+(env
+ (fuzz
+  (ocamlopt_flags
+   (:standard -afl-instrument))))
+
+(rule
+ (alias fuzz)
+ (deps
+  (source_tree inputs)
+  (source_tree outputs))
+ (action
+  (run afl-fuzz -m none -i inputs -o outputs ./%{exe:readline_test.exe})))

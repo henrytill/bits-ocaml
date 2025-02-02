@@ -1,0 +1,32 @@
+(test
+ (name delimcc_test)
+ (libraries bits))
+
+(test
+ (name hlist_test)
+ (libraries bits))
+
+(test
+ (name landins_knot_test)
+ (libraries bits))
+
+(test
+ (name lenses_test)
+ (libraries bits))
+
+(test
+ (name sqlite_test)
+ (libraries sqlite3))
+
+(test
+ (name timestamp)
+ (libraries unix))
+
+(test
+ (name views_test)
+ (libraries bits))
+
+(env
+ (static
+  (ocamlopt_flags
+   (:standard -ccopt -static))))

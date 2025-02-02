@@ -7,7 +7,6 @@ module type SAFE_ARRAY = sig
     | Empty : 'a brand
 
   val brand : 'a array -> 'a brand
-  val last : ('s, 'a) t -> 's index
   val set : ('s, 'a) t -> 's index -> 'a -> unit
   val get : ('s, 'a) t -> 's index -> 'a
   val zero : 's index

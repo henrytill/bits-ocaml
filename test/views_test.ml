@@ -1,4 +1,4 @@
-open Views
+open Bits.Views
 
 let zero = Nat.(into Zero)
 let succ n = Nat.(into (Succ n))
@@ -11,7 +11,7 @@ let rec fact m =
   | Zero -> one
   | Succ n -> mul m (fact n)
 
-let rec fib m =
+let[@warning "-32"] rec fib m =
   let open Nat in
   match out m with
   | Zero -> zero
@@ -24,5 +24,5 @@ let rec fib m =
 let tip = Tree.(into Tip)
 let leaf x = Tree.(into (Leaf x))
 let fork x y = Tree.(into (Fork (x, y)))
-let tree = fork (fork (leaf 1) (leaf 2)) (fork (leaf 3) tip)
+let[@warning "-32"] tree = fork (fork (leaf 1) (leaf 2)) (fork (leaf 3) tip)
 let () = print_endline (Nat.show (fact seven))

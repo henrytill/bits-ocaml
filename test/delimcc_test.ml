@@ -1,3 +1,5 @@
+open Bits
+
 let () =
   Delimcc_tutorial.(
     print_endline (string_of_int Exercise_05.no_01);

@@ -1,4 +1,4 @@
-open Lenses
+open Bits.Lenses
 
 type address = {
   _road : string;
@@ -21,7 +21,7 @@ let fred =
 
 (* Some lenses for the data *)
 
-let name : (person, string) lens' =
+let[@warning "-32"] name : (person, string) lens' =
   object
     method get x = x._name
     method set v x = { x with _name = v }
