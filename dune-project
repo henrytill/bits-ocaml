@@ -21,9 +21,9 @@
  (description "A longer description")
  (depends
   (ocaml
-   (< 5))
-  (delimcc
-   (>= 2023.06.17))
+   (> 5.0.0))
+  (delimcc_of_fxhandler
+   (>= 0.1))
   (sqlite3
    (>= 5.3.0)))
  (tags

@@ -1,4 +1,4 @@
 (library
  (name bits)
  (public_name bits)
- (libraries delimcc))
+ (libraries delimcc_of_fxhandler))

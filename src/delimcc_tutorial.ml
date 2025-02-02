@@ -1,3 +1,5 @@
+module Delimcc = Delimcc_of_fxhandler
+
 let make_ops () =
   let p = Delimcc.new_prompt () in
   let reset = Delimcc.push_prompt p in

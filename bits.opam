@@ -11,8 +11,8 @@ doc: "https://url/to/documentation"
 bug-reports: "https://github.com/username/reponame/issues"
 depends: [
   "dune" {>= "3.17"}
-  "ocaml" {< "5"}
-  "delimcc" {>= "2023.06.17"}
+  "ocaml" {> "5.0.0"}
+  "delimcc_of_fxhandler" {>= "0.1"}
   "sqlite3" {>= "5.3.0"}
   "odoc" {with-doc}
 ]
