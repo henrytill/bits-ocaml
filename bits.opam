@@ -9,7 +9,7 @@ depends: [
   "ocaml" {>= "5.0.0"}
   "delimcc_of_fxhandler" {>= "0.1"}
   "dune" {>= "3.16"}
-  "sqlite3" {>= "5.3.0"}
+  "sqlite3" {with-test & >= "5.3.0"}
   "odoc" {with-doc}
 ]
 build: [
