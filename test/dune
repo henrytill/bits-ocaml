@@ -1,29 +1,36 @@
 (test
  (name delimcc_test)
+ (modules delimcc_test)
  (libraries bits))
 
 (test
  (name hlist_test)
+ (modules hlist_test)
  (libraries bits))
 
 (test
  (name landins_knot_test)
+ (modules landins_knot_test)
  (libraries bits))
 
 (test
  (name lenses_test)
+ (modules lenses_test)
  (libraries bits))
 
 (test
  (name sqlite_test)
+ (modules sqlite_test)
  (libraries sqlite3))
 
 (test
  (name timestamp)
+ (modules timestamp)
  (libraries unix))
 
 (test
  (name views_test)
+ (modules views_test)
  (libraries bits))
 
 (env
