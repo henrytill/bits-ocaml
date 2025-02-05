@@ -1,3 +1,6 @@
+(mdx
+ (libraries bits))
+
 (test
  (name delimcc_test)
  (modules delimcc_test)

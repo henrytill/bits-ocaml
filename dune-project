@@ -1,5 +1,7 @@
 (lang dune 3.16)
 
+(using mdx 0.4)
+
 (name bits)
 
 (generate_opam_files true)
@@ -20,6 +22,10 @@
   (delimcc_of_fxhandler
    (>= 0.1))
   dune
+  (mdx
+   (and
+    :with-test
+    (>= 2.5.0)))
   (sqlite3
    (and
     :with-test
