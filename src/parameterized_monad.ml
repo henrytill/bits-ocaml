@@ -1,9 +1,10 @@
 module M = struct
   type ('pre, 'post, 'a) t = 'pre -> 'a * 'post
 
-  let return (x : 'a) : ('post, 'post, 'a) t = fun post -> (x, post)
+  let return (type s a) (x : a) : (s, s, a) t = fun s -> (x, s)
 
-  let bind (m : ('pre, 'mid, 'a) t) (f : 'a -> ('mid, 'post, 'b) t) : ('pre, 'post, 'b) t =
+  let bind (type pre mid post a b) (m : (pre, mid, a) t) (f : a -> (mid, post, b) t) :
+      (pre, post, b) t =
     fun pre ->
     let a, mid = m pre in
     f a mid
@@ -15,8 +16,8 @@ module File = struct
   type closed = Closed
   type opened = { fd : Unix.file_descr }
 
-  let open_file : string -> (closed, opened, unit) M.t =
-    fun filename Closed ->
+  let open_file (filename : string) : (closed, opened, unit) M.t =
+    fun Closed ->
     let fd = Unix.(openfile filename [ O_RDWR; O_CREAT ] 0o640) in
     ((), { fd })
 
