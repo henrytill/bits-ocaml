@@ -27,5 +27,4 @@ let rec last : type a n. (a, n succ) vec -> a = function
 type (_, _) eq = Refl : ('a, 'a) eq
 
 (** type-safe cast *)
-let cast : type a b. (a, b) eq -> a -> b = function
-  | Refl -> fun x -> x
+let cast : type a b. (a, b) eq -> a -> b = fun Refl x -> x
