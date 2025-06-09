@@ -23,13 +23,23 @@ end = struct
     | Mul (a1, a2), Mul (b1, b2) -> equal a1 b1 && equal a2 b2
     | _, _ -> false
 
-  let rec pp fmt x =
+  let pp fmt =
     let open Format in
-    match x with
-    | Var a -> fprintf fmt "@[Var %S@]" a
-    | Const a -> fprintf fmt "@[Const %d@]" a
-    | Add (a, b) -> fprintf fmt "@[Add (%a, %a)@]" pp a pp b
-    | Mul (a, b) -> fprintf fmt "@[Mul (%a, %a)@]" pp a pp b
+    let wrap flag fmt x pp =
+      if flag then
+        fprintf fmt "@[<hv 1>(%a)@]" pp x
+      else
+        pp fmt x
+    in
+    let rec go flag fmt fm =
+      wrap flag fmt fm @@ fun fmt -> function
+      | Var x -> fprintf fmt "Var %S" x
+      | Const m -> fprintf fmt "Const %d" m
+      | Add (a, b) -> fprintf fmt "@[<hv 1>Add@;<1 0>(%a,@, %a)@]" unwrapped a unwrapped b
+      | Mul (a, b) -> fprintf fmt "@[<hv 1>Mul@;<1 0>(%a,@, %a)@]" unwrapped a unwrapped b
+    and wrapped fmt = go true fmt
+    and unwrapped fmt = go false fmt in
+    fprintf fmt "@[<hv 1>%a@]" wrapped
 
   let show = Format.asprintf "%a" pp
   let to_string = show
