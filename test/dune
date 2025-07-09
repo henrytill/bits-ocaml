@@ -22,6 +22,11 @@
  (libraries bits))
 
 (test
+ (name spreadsheet_test)
+ (modules spreadsheet_test)
+ (libraries bits))
+
+(test
  (name sqlite_test)
  (modules sqlite_test)
  (libraries sqlite3))
