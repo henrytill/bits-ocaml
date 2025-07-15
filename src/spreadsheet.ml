@@ -1,7 +1,7 @@
 (** {{:https://semantic-domain.blogspot.com/2015/07/how-to-implement-spreadsheet.html} How to
      implement a spreadsheet} *)
 
-module type CELL = sig
+module Cell : sig
   type 'a cell
   (** The type of cells containg a value of type 'a *)
 
@@ -22,9 +22,7 @@ module type CELL = sig
 
   val run : 'a exp -> 'a
   (** Runs an expression. Useful for looking at the values of cells from the outside. *)
-end
-
-module Cell : CELL = struct
+end = struct
   type 'a cell = {
     mutable code : 'a exp;
         (** The expression that the cell contains. Mutable because we can alter the contents of a
