@@ -14,12 +14,15 @@ let example =
        return (a + b))
   in
   let* a = get result in
+  let () = assert (a = 30) in
   let () = Printf.printf "%d\n" a in
   let () = set x (return 20) in
   let* a = get result in
+  let () = assert (a = 40) in
   let () = Printf.printf "%d\n" a in
   let () = set y (return 30) in
   let* a = get result in
+  let () = assert (a = 50) in
   let () = Printf.printf "%d\n" a in
   return ()
 
