@@ -53,7 +53,7 @@ end = struct
 
   let id (Pack c) = c.id
 
-  let rec union xs ys =
+  let[@tail_mod_cons] rec union xs ys =
     match xs with
     | [] -> ys
     | x :: xs' ->
@@ -75,9 +75,9 @@ end = struct
     incr r;
     !r
 
-  let cell exp () =
-    let n = new_id () in
-    let cell = { code = exp; value = None; reads = []; observers = []; id = n } in
+  let cell code () =
+    let id = new_id () in
+    let cell = { code; id; value = None; reads = []; observers = [] } in
     (cell, [])
 
   let get c () =
@@ -92,13 +92,13 @@ end = struct
 
   let remove_observer o (Pack c) = c.observers <- List.filter (fun o' -> id o != id o') c.observers
 
-  let rec invalidate (Pack c) =
+  let rec invalidate (Pack c as ec) =
     let os = c.observers in
     let rs = c.reads in
     c.observers <- [];
     c.value <- None;
     c.reads <- [];
-    List.iter (remove_observer (Pack c)) rs;
+    List.iter (remove_observer ec) rs;
     List.iter invalidate os
 
   let set c exp =
