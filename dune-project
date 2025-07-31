@@ -28,6 +28,10 @@
    (and
     :with-test
     (>= 2.5.0)))
+  (ppxlib
+   (and
+    (>= 0.35.0)
+    (< 0.36)))
   (sqlite3
    (and
     :with-test

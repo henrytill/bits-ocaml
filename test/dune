@@ -32,6 +32,13 @@
  (libraries sqlite3))
 
 (test
+ (name goedel_test)
+ (modules goedel_test)
+ (libraries bits)
+ (preprocess
+  (pps ppx_goedel)))
+
+(test
  (name timestamp)
  (modules timestamp)
  (libraries unix))
