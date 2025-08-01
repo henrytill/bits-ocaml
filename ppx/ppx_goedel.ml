@@ -1,3 +1,8 @@
+(** {{:https://semantic-domain.blogspot.com/2012/12/total-functional-programming-in-partial.html}
+     Total Functional Programming in a Partial Impure Language}
+
+    see {!Bits.Goedel}*)
+
 open Ppxlib
 
 module Term = struct

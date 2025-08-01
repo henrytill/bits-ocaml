@@ -1,5 +1,6 @@
 (library
  (name ppx_goedel)
+ (public_name bits.ppx_goedel)
  (kind ppx_rewriter)
  (modules ppx_goedel)
  (libraries bits ppxlib)
