@@ -8,11 +8,11 @@ open Ppxlib
 module Term = struct
   type var = string
 
-  type tp =
+  type ty =
     | Nat
     | One
-    | Prod of tp * tp
-    | Arrow of tp * tp
+    | Prod of ty * ty
+    | Arrow of ty * ty
 
   type term =
     | Var of var
@@ -26,25 +26,24 @@ module Term = struct
     | Zero
     | Succ of term
     | Iter of term * term * var * term
-    | Annot of term * tp
+    | Annot of term * ty
 
-  let rec print_tp ppf tp =
+  let rec print_ty ppf =
     let open Format in
-    match tp with
+    function
     | One -> fprintf ppf "unit"
     | Nat -> fprintf ppf "nat"
-    | Prod (tp1, tp2) -> fprintf ppf "(%a * %a)" print_tp tp1 print_tp tp2
-    | Arrow ((Arrow (_, _) as tp1), tp2) -> fprintf ppf "(%a) -> %a" print_tp tp1 print_tp tp2
-    | Arrow (tp1, tp2) -> fprintf ppf "%a -> %a" print_tp tp1 print_tp tp2
+    | Prod (ty1, ty2) -> fprintf ppf "(%a * %a)" print_ty ty1 print_ty ty2
+    | Arrow ((Arrow (_, _) as ty1), ty2) -> fprintf ppf "(%a) -> %a" print_ty ty1 print_ty ty2
+    | Arrow (ty1, ty2) -> fprintf ppf "%a -> %a" print_ty ty1 print_ty ty2
 
-  let rec string_of_tp tp =
-    match tp with
+  let rec string_of_ty = function
     | One -> "unit"
     | Nat -> "nat"
-    | Prod (tp1, tp2) -> Printf.sprintf "(%s * %s)" (string_of_tp tp1) (string_of_tp tp2)
-    | Arrow ((Arrow (_, _) as tp1), tp2) ->
-        Printf.sprintf "(%s) -> %s" (string_of_tp tp1) (string_of_tp tp2)
-    | Arrow (tp1, tp2) -> Printf.sprintf "%s -> %s" (string_of_tp tp1) (string_of_tp tp2)
+    | Prod (ty1, ty2) -> Printf.sprintf "(%s * %s)" (string_of_ty ty1) (string_of_ty ty2)
+    | Arrow ((Arrow (_, _) as ty1), ty2) ->
+        Printf.sprintf "(%s) -> %s" (string_of_ty ty1) (string_of_ty ty2)
+    | Arrow (ty1, ty2) -> Printf.sprintf "%s -> %s" (string_of_ty ty1) (string_of_ty ty2)
 end
 
 module Quote = struct
@@ -70,7 +69,7 @@ end
 module Context = struct
   open Term
 
-  type ctx = (var * tp) list
+  type ctx = (var * ty) list
 
   type 'a result =
     | Error of string
@@ -103,32 +102,32 @@ module Elaborate = struct
 
   let ( let* ) = ( >>= )
 
-  let rec check ~loc e tp =
-    match (e, tp) with
-    | Lam (x, e), Arrow (tp1, tp2) ->
-        with_hyp (x, tp1) (check ~loc e tp2 >>= fun t -> return (curry ~loc t))
-    | Lam (_, _), tp -> error "Expected function type, got '%s'" (string_of_tp tp)
+  let rec check ~loc e ty =
+    match (e, ty) with
+    | Lam (x, e), Arrow (ty1, ty2) ->
+        with_hyp (x, ty1) (check ~loc e ty2 >>= fun t -> return (curry ~loc t))
+    | Lam (_, _), ty -> error "Expected function type, got '%s'" (string_of_ty ty)
     | Unit, One -> return (unit ~loc)
-    | Unit, tp -> error "Expected unit type, got '%s'" (string_of_tp tp)
-    | Pair (e1, e2), Prod (tp1, tp2) ->
-        let* t1 = check ~loc e1 tp1 in
-        let* t2 = check ~loc e2 tp2 in
+    | Unit, ty -> error "Expected unit type, got '%s'" (string_of_ty ty)
+    | Pair (e1, e2), Prod (ty1, ty2) ->
+        let* t1 = check ~loc e1 ty1 in
+        let* t2 = check ~loc e2 ty2 in
         return (pair ~loc t1 t2)
-    | Pair (_, _), tp -> error "Expected product type, got '%s'" (string_of_tp tp)
-    | Iter (en, ez, x, es), tp ->
+    | Pair (_, _), ty -> error "Expected product type, got '%s'" (string_of_ty ty)
+    | Iter (en, ez, x, es), ty ->
         let* tn = check ~loc en Nat in
-        let* tz = check ~loc ez tp in
-        let* ts = with_hyp (x, tp) (check ~loc es tp) in
+        let* tz = check ~loc ez ty in
+        let* ts = with_hyp (x, ty) (check ~loc es ty) in
         return (compose ~loc (pair ~loc (id ~loc) tn) (iter ~loc tz ts))
-    | Let (x, e1, e2), tp2 ->
-        let* t1, tp1 = synth ~loc e1 in
-        let* t2 = with_hyp (x, tp1) (check ~loc e2 tp2) in
+    | Let (x, e1, e2), ty2 ->
+        let* t1, ty1 = synth ~loc e1 in
+        let* t2 = with_hyp (x, ty1) (check ~loc e2 ty2) in
         return (compose ~loc (pair ~loc (id ~loc) t1) t2)
     | _, _ -> (
         synth ~loc e >>= function
-        | t, tp' when tp = tp' -> return t
-        | _, tp' ->
-            error "Expected type '%s', inferred type '%s'" (string_of_tp tp) (string_of_tp tp'))
+        | t, ty' when ty = ty' -> return t
+        | _, ty' ->
+            error "Expected type '%s', inferred type '%s'" (string_of_ty ty) (string_of_ty ty'))
 
   and synth ~loc = function
     | Var x -> lookup ~loc x
@@ -136,34 +135,34 @@ module Elaborate = struct
     | Succ e1 -> check ~loc e1 Nat >>= fun t1 -> return (compose ~loc t1 (succ ~loc), Nat)
     | App (e1, e2) -> (
         synth ~loc e1 >>= function
-        | t1, Arrow (tp2, tp) ->
-            check ~loc e2 tp2 >>= fun t2 -> return (compose ~loc (pair ~loc t1 t2) (eval ~loc), tp)
-        | _, tp_bad -> error "Expected function, got '%s'" (string_of_tp tp_bad))
+        | t1, Arrow (ty2, ty) ->
+            check ~loc e2 ty2 >>= fun t2 -> return (compose ~loc (pair ~loc t1 t2) (eval ~loc), ty)
+        | _, ty_bad -> error "Expected function, got '%s'" (string_of_ty ty_bad))
     | Fst e' -> (
         synth ~loc e' >>= function
-        | t', Prod (tp1, _) -> return (compose ~loc t' (fst ~loc), tp1)
-        | _, tp_bad -> error "Expected product, got '%s'" (string_of_tp tp_bad))
+        | t', Prod (ty1, _) -> return (compose ~loc t' (fst ~loc), ty1)
+        | _, ty_bad -> error "Expected product, got '%s'" (string_of_ty ty_bad))
     | Snd e' -> (
         synth ~loc e' >>= function
-        | t', Prod (_, tp2) -> return (compose ~loc t' (snd ~loc), tp2)
-        | _, tp_bad -> error "Expected product, got '%s'" (string_of_tp tp_bad))
+        | t', Prod (_, ty2) -> return (compose ~loc t' (snd ~loc), ty2)
+        | _, ty_bad -> error "Expected product, got '%s'" (string_of_ty ty_bad))
     | Let (x, e1, e2) ->
-        let* t1, tp1 = synth ~loc e1 in
-        let* t2, tp2 = with_hyp (x, tp1) (synth ~loc e2) in
-        return (compose ~loc (pair ~loc (id ~loc) t1) t2, tp2)
-    | Annot (e, tp) -> check ~loc e tp >>= fun t -> return (t, tp)
+        let* t1, ty1 = synth ~loc e1 in
+        let* t2, ty2 = with_hyp (x, ty1) (synth ~loc e2) in
+        return (compose ~loc (pair ~loc (id ~loc) t1) t2, ty2)
+    | Annot (e, ty) -> check ~loc e ty >>= fun t -> return (t, ty)
     | _ -> error "Checking term in synthesizing position"
 end
 
-let rec tp =
+let rec ty =
   let open Term in
   function
   | [%type: nat] -> Nat
   | [%type: unit] -> One
-  | [%type: [%t? a] -> [%t? b]] -> Arrow (tp a, tp b)
-  | [%type: [%t? a] * [%t? b]] -> Prod (tp a, tp b)
-  | { ptyp_desc = Ptyp_poly (_, t); _ } -> tp t
-  | typ -> failwith (Format.asprintf "unhandled type declaration: %a" Pprintast.core_type typ)
+  | [%type: [%t? a] -> [%t? b]] -> Arrow (ty a, ty b)
+  | [%type: [%t? a] * [%t? b]] -> Prod (ty a, ty b)
+  | { ptyp_desc = Ptyp_poly (_, t); _ } -> ty t
+  | t -> failwith (Format.asprintf "unhandled type declaration: %a" Pprintast.core_type t)
 
 let var_of_pat pat =
   match pat.ppat_desc with
@@ -188,20 +187,19 @@ let rec term =
   | [%expr
       let [%p? x] : [%t? t] = [%e? e1] in
       [%e? e2]] ->
-      Let (var_of_pat x, Annot (term e1, tp t), term e2)
+      Let (var_of_pat x, Annot (term e1, ty t), term e2)
   | [%expr
       let [%p? x] = [%e? e1] in
       [%e? e2]] ->
       Let (var_of_pat x, term e1, term e2)
-  | [%expr ([%e? e] : [%t? t])] -> Annot (term e, tp t)
+  | [%expr ([%e? e] : [%t? t])] -> Annot (term e, ty t)
   | { pexp_desc = Pexp_ident { txt = Lident x; _ }; _ } -> Var x
   | [%expr fun [%p? x] -> [%e? e]] -> Lam (var_of_pat x, term e)
   | [%expr [%e? e1] [%e? e2]] -> App (term e1, term e2)
   | [%expr [%e? e1] [%e? e2] [%e? e3]] -> App (App (term e1, term e2), term e3)
-  | expr -> failwith (Format.asprintf "unknown expression: %a" Pprintast.expression expr)
+  | e -> failwith (Format.asprintf "unknown expression: %a" Pprintast.expression e)
 
-let expand ~ctxt expr =
-  let loc = Expansion_context.Extension.extension_point_loc ctxt in
+let expand ~loc ~path:_ expr =
   try
     let term = term expr in
     match Context.run (Elaborate.synth ~loc term) with
@@ -214,7 +212,7 @@ let expand ~ctxt expr =
       pexp_extension ~loc (Location.error_extensionf ~loc "System T error: %s" msg))
 
 let extension =
-  Extension.V3.declare
+  Extension.declare
     "goedel"
     Extension.Context.expression
     Ast_pattern.(single_expr_payload __)
