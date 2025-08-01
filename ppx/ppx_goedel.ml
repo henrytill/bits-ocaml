@@ -169,7 +169,7 @@ let var_of_pat pat =
   | Ppat_var { txt; _ } -> txt
   | _ -> failwith "expected variable pattern"
 
-let rec term =
+let[@warning "-11"] rec term =
   let open Term in
   function
   | [%expr ()] -> Unit
@@ -194,9 +194,14 @@ let rec term =
       Let (var_of_pat x, term e1, term e2)
   | [%expr ([%e? e] : [%t? t])] -> Annot (term e, ty t)
   | { pexp_desc = Pexp_ident { txt = Lident x; _ }; _ } -> Var x
-  | [%expr fun [%p? x] -> [%e? e]] -> Lam (var_of_pat x, term e)
+  | [%expr fun [%p? p] -> [%e? e]] -> Lam (var_of_pat p, term e)
+  | [%expr fun [%p? p1] [%p? p2] -> [%e? e]] -> Lam (var_of_pat p1, Lam (var_of_pat p2, term e))
+  | [%expr fun [%p? p1] [%p? p2] [%p? p3] -> [%e? e]] ->
+      Lam (var_of_pat p1, Lam (var_of_pat p2, Lam (var_of_pat p3, term e)))
   | [%expr [%e? e1] [%e? e2]] -> App (term e1, term e2)
   | [%expr [%e? e1] [%e? e2] [%e? e3]] -> App (App (term e1, term e2), term e3)
+  | [%expr [%e? e1] [%e? e2] [%e? e3] [%e? e4]] ->
+      App (App (App (term e1, term e2), term e3), term e4)
   | e -> failwith (Format.asprintf "unknown expression: %a" Pprintast.expression e)
 
 let expand ~loc ~path:_ expr =
