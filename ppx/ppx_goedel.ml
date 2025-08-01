@@ -184,6 +184,8 @@ let[@warning "-11"] rec term =
         | Zero -> [%e? ez]
         | Succ [%p? x] -> [%e? es])] ->
       Iter (term en, term ez, var_of_pat x, term es)
+  | [%expr iter [%e? en] ~zero:[%e? ez] ~succ:(fun [%p? x] -> [%e? es])] ->
+      Iter (term en, term ez, var_of_pat x, term es)
   | [%expr
       let [%p? x] : [%t? t] = [%e? e1] in
       [%e? e2]] ->
