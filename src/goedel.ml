@@ -21,8 +21,8 @@ let rec iter z s (a, n) =
   | S n -> s (a, iter z s (a, n))
 
 let run tm =
-  let rec loop = function
-    | Z -> 0
-    | S n -> 1 + loop n
+  let rec loop acc = function
+    | Z -> acc
+    | S n -> loop (acc + 1) n
   in
-  loop (tm ())
+  loop 0 (tm ())
