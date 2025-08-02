@@ -77,22 +77,22 @@ module Context = struct
 
   type 'a t = ctx -> 'a result
 
-  let return v = fun _ -> Done v
+  let return (v : 'a) : 'a t = fun _ -> Done v
 
-  let ( >>= ) m f =
+  let ( >>= ) (m : 'a t) (f : 'a -> 'b t) : 'b t =
     fun ctx ->
     match m ctx with
     | Done v -> f v ctx
     | Error s -> Error s
 
-  let with_hyp hyp cmd = fun ctx -> cmd (hyp :: ctx)
+  let with_hyp (hyp : var * ty) (cmd : 'a t) : 'a t = fun ctx -> cmd (hyp :: ctx)
 
-  let lookup ~loc x ctx =
+  let lookup ~loc (x : var) (ctx : ctx) : (expression * ty) result =
     try Done (Quote.find ~loc x ctx, List.assoc x ctx)
     with Not_found -> Error (Printf.sprintf "'%s' unbound" x)
 
   let error fmt = Printf.ksprintf (fun msg _ -> Error msg) fmt
-  let run cmd = cmd []
+  let run (cmd : 'a t) : 'a result = cmd []
 end
 
 module Elaborate = struct
