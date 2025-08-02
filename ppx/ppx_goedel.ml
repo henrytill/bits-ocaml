@@ -104,6 +104,10 @@ module Elaborate = struct
 
   let rec check ~loc e ty =
     match (e, ty) with
+    | Let (x, e1, e2), ty2 ->
+        let* t1, ty1 = synth ~loc e1 in
+        let* t2 = with_hyp (x, ty1) (check ~loc e2 ty2) in
+        return (compose ~loc (pair ~loc (id ~loc) t1) t2)
     | Lam (x, e), Arrow (ty1, ty2) ->
         with_hyp (x, ty1) (check ~loc e ty2 >>= fun t -> return (curry ~loc t))
     | Lam (_, _), ty -> error "Expected function type, got '%s'" (string_of_ty ty)
@@ -119,10 +123,6 @@ module Elaborate = struct
         let* tz = check ~loc ez ty in
         let* ts = with_hyp (x, ty) (check ~loc es ty) in
         return (compose ~loc (pair ~loc (id ~loc) tn) (iter ~loc tz ts))
-    | Let (x, e1, e2), ty2 ->
-        let* t1, ty1 = synth ~loc e1 in
-        let* t2 = with_hyp (x, ty1) (check ~loc e2 ty2) in
-        return (compose ~loc (pair ~loc (id ~loc) t1) t2)
     | _, _ -> (
         synth ~loc e >>= function
         | t, ty' when ty = ty' -> return t
@@ -131,8 +131,10 @@ module Elaborate = struct
 
   and synth ~loc = function
     | Var x -> lookup ~loc x
-    | Zero -> return (compose ~loc (unit ~loc) (zero ~loc), Nat)
-    | Succ e1 -> check ~loc e1 Nat >>= fun t1 -> return (compose ~loc t1 (succ ~loc), Nat)
+    | Let (x, e1, e2) ->
+        let* t1, ty1 = synth ~loc e1 in
+        let* t2, ty2 = with_hyp (x, ty1) (synth ~loc e2) in
+        return (compose ~loc (pair ~loc (id ~loc) t1) t2, ty2)
     | App (e1, e2) -> (
         synth ~loc e1 >>= function
         | t1, Arrow (ty2, ty) ->
@@ -146,10 +148,8 @@ module Elaborate = struct
         synth ~loc e >>= function
         | t, Prod (_, ty2) -> return (compose ~loc t (snd ~loc), ty2)
         | _, ty_bad -> error "Expected product, got '%s'" (string_of_ty ty_bad))
-    | Let (x, e1, e2) ->
-        let* t1, ty1 = synth ~loc e1 in
-        let* t2, ty2 = with_hyp (x, ty1) (synth ~loc e2) in
-        return (compose ~loc (pair ~loc (id ~loc) t1) t2, ty2)
+    | Zero -> return (compose ~loc (unit ~loc) (zero ~loc), Nat)
+    | Succ e1 -> check ~loc e1 Nat >>= fun t1 -> return (compose ~loc t1 (succ ~loc), Nat)
     | Annot (e, ty) -> check ~loc e ty >>= fun t -> return (t, ty)
     | _ -> error "Checking term in synthesizing position"
 end
