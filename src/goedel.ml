@@ -4,6 +4,10 @@ type nat =
   | Z
   | S of nat
 
+type one = unit
+type ('a, 'b) pair = 'a * 'b
+type ('a, 'b) arr = 'a -> 'b
+
 let id x = x
 let compose f g a = g (f a)
 let unit _ = ()
