@@ -38,8 +38,14 @@ let e2_alt =
     let mult : nat -> nat -> nat = fun x y -> iter x ~zero:Zero ~succ:(fun n -> sum y n) in
     mult (Succ (Succ Zero)) (Succ (Succ (Succ Zero)))]
 
+let e3 =
+  [%goedel
+    let p : nat * unit = (Succ Zero, ()) in
+    fst p]
+
 let () =
   Printf.printf "2 + 3 = %d\n" (Bits.Goedel.run e1);
   Printf.printf "2 + 3 = %d\n" (Bits.Goedel.run e1_alt);
   Printf.printf "2 * 3 = %d\n" (Bits.Goedel.run e2);
-  Printf.printf "2 * 3 = %d\n" (Bits.Goedel.run e2_alt)
+  Printf.printf "2 * 3 = %d\n" (Bits.Goedel.run e2_alt);
+  Printf.printf "fst (1, 0) = %d\n" (Bits.Goedel.run e3)
