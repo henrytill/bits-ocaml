@@ -138,13 +138,13 @@ module Elaborate = struct
         | t1, Arrow (ty2, ty) ->
             check ~loc e2 ty2 >>= fun t2 -> return (compose ~loc (pair ~loc t1 t2) (eval ~loc), ty)
         | _, ty_bad -> error "Expected function, got '%s'" (string_of_ty ty_bad))
-    | Fst e' -> (
-        synth ~loc e' >>= function
-        | t', Prod (ty1, _) -> return (compose ~loc t' (fst ~loc), ty1)
+    | Fst e -> (
+        synth ~loc e >>= function
+        | t, Prod (ty1, _) -> return (compose ~loc t (fst ~loc), ty1)
         | _, ty_bad -> error "Expected product, got '%s'" (string_of_ty ty_bad))
-    | Snd e' -> (
-        synth ~loc e' >>= function
-        | t', Prod (_, ty2) -> return (compose ~loc t' (snd ~loc), ty2)
+    | Snd e -> (
+        synth ~loc e >>= function
+        | t, Prod (_, ty2) -> return (compose ~loc t (snd ~loc), ty2)
         | _, ty_bad -> error "Expected product, got '%s'" (string_of_ty ty_bad))
     | Let (x, e1, e2) ->
         let* t1, ty1 = synth ~loc e1 in
