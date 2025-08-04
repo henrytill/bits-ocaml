@@ -17,7 +17,6 @@
  (name bits)
  (synopsis "Some random bits of code")
  (description "Some random bits of code")
- (allow_empty)
  (depends
   (ocaml
    (>= 5.0.0))
@@ -28,9 +27,17 @@
    (and
     :with-test
     (>= 2.5.0)))
-  (ppxlib
-   (>= 0.35.0))
   (sqlite3
    (and
     :with-test
     (>= 5.3.0)))))
+
+(package
+ (name bits-goedel)
+ (synopsis "Total Functional Programming in a Partial Impure Language")
+ (depends
+  (ocaml
+   (>= 5.0.0))
+  dune
+  (ppxlib
+   (>= 0.35.0))))

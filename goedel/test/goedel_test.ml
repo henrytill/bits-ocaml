@@ -44,8 +44,8 @@ let e3 =
     fst p]
 
 let () =
-  Printf.printf "2 + 3 = %d\n" (Bits.Goedel.run e1);
-  Printf.printf "2 + 3 = %d\n" (Bits.Goedel.run e1_alt);
-  Printf.printf "2 * 3 = %d\n" (Bits.Goedel.run e2);
-  Printf.printf "2 * 3 = %d\n" (Bits.Goedel.run e2_alt);
-  Printf.printf "fst (1, 0) = %d\n" (Bits.Goedel.run e3)
+  Printf.printf "2 + 3 = %d\n" (Goedel.run e1);
+  Printf.printf "2 + 3 = %d\n" (Goedel.run e1_alt);
+  Printf.printf "2 * 3 = %d\n" (Goedel.run e2);
+  Printf.printf "2 * 3 = %d\n" (Goedel.run e2_alt);
+  Printf.printf "fst (1, 0) = %d\n" (Goedel.run e3)

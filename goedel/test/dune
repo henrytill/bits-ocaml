@@ -1,0 +1,7 @@
+(test
+ (name goedel_test)
+ (package bits-goedel)
+ (modules goedel_test)
+ (libraries goedel)
+ (preprocess
+  (pps ppx_goedel)))

@@ -22,24 +22,28 @@
       nixpkgs,
       ...
     }@inputs:
-    let
-      package = "bits";
-    in
     flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
         on = opam-nix.lib.${system};
-        scope = on.buildOpamProject { resolveArgs.with-test = true; } package ./. {
+        scope = on.buildOpamProject' { resolveArgs.with-test = true; } ./. {
           ocaml-base-compiler = "5.3.0";
         };
-        overlay = final: prev: {
-          ${package} = prev.${package}.overrideAttrs (as: { });
-        };
+        overlay = final: prev: { };
       in
-      {
+      rec {
         legacyPackages = scope.overrideScope overlay;
-        packages.default = self.legacyPackages.${system}.${package};
+        packages.default = packages.all;
+        packages.bits = self.legacyPackages.${system}.bits;
+        packages.bits-goedel = self.legacyPackages.${system}.bits-goedel;
+        packages.all = pkgs.symlinkJoin {
+          name = "all";
+          paths = with packages; [
+            bits
+            bits-goedel
+          ];
+        };
       }
     );
 }

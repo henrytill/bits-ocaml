@@ -1,50 +1,52 @@
 (mdx
+ (package bits)
  (libraries bits))
 
 (test
  (name delimcc_test)
+ (package bits)
  (modules delimcc_test)
  (libraries bits))
 
 (test
  (name hlist_test)
+ (package bits)
  (modules hlist_test)
  (libraries bits))
 
 (test
  (name landins_knot_test)
+ (package bits)
  (modules landins_knot_test)
  (libraries bits))
 
 (test
  (name lenses_test)
+ (package bits)
  (modules lenses_test)
  (libraries bits))
 
 (test
  (name spreadsheet_test)
+ (package bits)
  (modules spreadsheet_test)
  (libraries bits))
 
 (test
  (name sqlite_test)
+ (package bits)
  (modules sqlite_test)
  (libraries sqlite3))
 
 (test
- (name goedel_test)
- (modules goedel_test)
- (libraries bits)
- (preprocess
-  (pps ppx_goedel)))
-
-(test
  (name timestamp)
+ (package bits)
  (modules timestamp)
  (libraries unix))
 
 (test
  (name views_test)
+ (package bits)
  (modules views_test)
  (libraries bits))
 

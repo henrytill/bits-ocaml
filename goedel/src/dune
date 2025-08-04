@@ -1,0 +1,13 @@
+(library
+ (name goedel)
+ (public_name bits-goedel)
+ (modules goedel))
+
+(library
+ (name ppx_goedel)
+ (public_name bits-goedel.ppx_goedel)
+ (kind ppx_rewriter)
+ (modules ppx_goedel)
+ (libraries ppxlib)
+ (preprocess
+  (pps ppxlib.metaquot)))

@@ -1,7 +1,7 @@
 (** {{:https://semantic-domain.blogspot.com/2012/12/total-functional-programming-in-partial.html}
      Total Functional Programming in a Partial Impure Language}
 
-    see {!Bits.Goedel} *)
+    see {!Goedel} *)
 
 open Ppxlib
 
@@ -47,23 +47,23 @@ module Term = struct
 end
 
 module Quote = struct
-  let id ~loc = [%expr Bits.Goedel.id]
-  let compose ~loc f g = [%expr Bits.Goedel.compose [%e f] [%e g]]
-  let unit ~loc = [%expr Bits.Goedel.unit]
-  let fst ~loc = [%expr Bits.Goedel.fst]
-  let snd ~loc = [%expr Bits.Goedel.snd]
-  let pair ~loc f g = [%expr Bits.Goedel.pair [%e f] [%e g]]
-  let prod ~loc f g = [%expr Bits.Goedel.prod [%e f] [%e g]]
-  let curry ~loc f = [%expr Bits.Goedel.curry [%e f]]
-  let eval ~loc = [%expr Bits.Goedel.eval]
-  let zero ~loc = [%expr Bits.Goedel.zero]
-  let succ ~loc = [%expr Bits.Goedel.succ]
-  let iter ~loc z s = [%expr Bits.Goedel.iter [%e z] [%e s]]
+  let id ~loc = [%expr Goedel.id]
+  let compose ~loc f g = [%expr Goedel.compose [%e f] [%e g]]
+  let unit ~loc = [%expr Goedel.unit]
+  let fst ~loc = [%expr Goedel.fst]
+  let snd ~loc = [%expr Goedel.snd]
+  let pair ~loc f g = [%expr Goedel.pair [%e f] [%e g]]
+  let prod ~loc f g = [%expr Goedel.prod [%e f] [%e g]]
+  let curry ~loc f = [%expr Goedel.curry [%e f]]
+  let eval ~loc = [%expr Goedel.eval]
+  let zero ~loc = [%expr Goedel.zero]
+  let succ ~loc = [%expr Goedel.succ]
+  let iter ~loc z s = [%expr Goedel.iter [%e z] [%e s]]
 
   let rec find ~loc x = function
     | [] -> raise Not_found
-    | (x', _) :: _ when x = x' -> [%expr Bits.Goedel.snd]
-    | _ :: ctx' -> [%expr Bits.Goedel.compose Bits.Goedel.fst [%e find ~loc x ctx']]
+    | (x', _) :: _ when x = x' -> [%expr Goedel.snd]
+    | _ :: ctx' -> [%expr Goedel.compose Goedel.fst [%e find ~loc x ctx']]
 end
 
 module Context = struct
