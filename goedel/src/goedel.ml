@@ -6,7 +6,7 @@ type nat =
 
 type one = unit
 type ('a, 'b) pair = 'a * 'b
-type ('a, 'b) arr = 'a -> 'b
+type ('a, 'b) arrow = 'a -> 'b
 
 let id x = x
 let compose f g a = g (f a)

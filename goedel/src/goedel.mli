@@ -7,7 +7,7 @@ type ('a, 'b) hom
 type nat
 type one
 type ('a, 'b) pair
-type ('a, 'b) arr
+type ('a, 'b) arrow
 
 val id : ('a, 'a) hom
 val compose : ('a, 'b) hom -> ('b, 'c) hom -> ('a, 'c) hom
@@ -15,8 +15,8 @@ val unit : ('a, one) hom
 val pair : ('a, 'b) hom -> ('a, 'c) hom -> ('a, ('b, 'c) pair) hom
 val fst : (('a, 'b) pair, 'a) hom
 val snd : (('a, 'b) pair, 'b) hom
-val curry : (('a, 'b) pair, 'c) hom -> ('a, ('b, 'c) arr) hom
-val eval : ((('a, 'b) arr, 'a) pair, 'b) hom
+val curry : (('a, 'b) pair, 'c) hom -> ('a, ('b, 'c) arrow) hom
+val eval : ((('a, 'b) arrow, 'a) pair, 'b) hom
 val zero : (one, nat) hom
 val succ : (nat, nat) hom
 val iter : ('a, 'b) hom -> (('a, 'b) pair, 'b) hom -> (('a, nat) pair, 'b) hom
