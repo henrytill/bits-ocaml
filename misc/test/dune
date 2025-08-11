@@ -21,9 +21,9 @@
  (libraries bits))
 
 (test
- (name lenses_test)
+ (name lens_test)
  (package bits)
- (modules lenses_test)
+ (modules lens_test)
  (libraries bits))
 
 (test
