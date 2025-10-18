@@ -23,20 +23,20 @@ let e2 =
         | Zero -> y
         | Succ n -> Succ n)
     in
-    let mult : nat -> nat -> nat =
+    let mul : nat -> nat -> nat =
       fun x y ->
       iter
         (match x with
         | Zero -> Zero
         | Succ n -> sum y n)
     in
-    mult (Succ (Succ Zero)) (Succ (Succ (Succ Zero)))]
+    mul (Succ (Succ Zero)) (Succ (Succ (Succ Zero)))]
 
 let e2_alt =
   [%goedel
     let sum : nat -> nat -> nat = fun x y -> iter x ~zero:y ~succ:(fun n -> Succ n) in
-    let mult : nat -> nat -> nat = fun x y -> iter x ~zero:Zero ~succ:(fun n -> sum y n) in
-    mult (Succ (Succ Zero)) (Succ (Succ (Succ Zero)))]
+    let mul : nat -> nat -> nat = fun x y -> iter x ~zero:Zero ~succ:(fun n -> sum y n) in
+    mul (Succ (Succ Zero)) (Succ (Succ (Succ Zero)))]
 
 let e3 =
   [%goedel
