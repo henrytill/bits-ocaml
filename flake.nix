@@ -33,15 +33,31 @@
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
-        on = opam-nix.lib.${system};
-        scope = on.buildOpamProject' { resolveArgs.with-test = true; } ./. {
+        devPackagesQuery = {
+          ocaml-lsp-server = "*";
+          ocamlformat = "*";
+        };
+        query = devPackagesQuery // {
           ocaml-base-compiler = "5.3.0";
         };
+        pkgs = nixpkgs.legacyPackages.${system};
+        on = opam-nix.lib.${system};
+        scope = on.buildOpamProject' { resolveArgs.with-test = true; } ./. query;
         overlay = final: prev: { };
+        legacyPackages = scope.overrideScope overlay;
+        devPackages = builtins.attrValues (
+          pkgs.lib.getAttrs (builtins.attrNames devPackagesQuery) legacyPackages
+        );
+        bitsShell = pkgs.mkShell {
+          inputsFrom = with legacyPackages; [
+            bits
+            bits-goedel
+          ];
+          packages = devPackages ++ [ ];
+        };
       in
       rec {
-        legacyPackages = scope.overrideScope overlay;
+        inherit legacyPackages;
         packages.default = packages.all;
         packages.bits = self.legacyPackages.${system}.bits;
         packages.bits-goedel = self.legacyPackages.${system}.bits-goedel;
@@ -52,6 +68,7 @@
             bits-goedel
           ];
         };
+        devShells.default = bitsShell;
       }
     );
 }
