@@ -8,21 +8,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  linux:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ocaml/setup-ocaml@v3
-        with:
-          ocaml-compiler: 5.2
-          dune-cache: true
-      - run: sudo apt-get install -yqq --no-install-recommends libsqlite3-dev
-      - run: opam install . --deps-only --with-test
-      - run: opam exec -- dune build
-      - run: opam exec -- dune runtest
   linux-flake:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v31
+      - uses: actions/checkout@v5
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
       - run: nix build -L --accept-flake-config
