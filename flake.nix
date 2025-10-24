@@ -34,11 +34,10 @@
       system:
       let
         devPackagesQuery = {
-          ocaml-lsp-server = "*";
           ocamlformat = "*";
         };
         query = devPackagesQuery // {
-          ocaml-base-compiler = "5.3.0";
+          ocaml-base-compiler = "5.4.0";
         };
         pkgs = nixpkgs.legacyPackages.${system};
         on = opam-nix.lib.${system};
