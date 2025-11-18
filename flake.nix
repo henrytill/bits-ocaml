@@ -34,6 +34,7 @@
       system:
       let
         devPackagesQuery = {
+          ocaml-lsp-server = "*";
           ocamlformat = "*";
         };
         query = devPackagesQuery // {
@@ -41,7 +42,7 @@
         };
         pkgs = nixpkgs.legacyPackages.${system};
         on = opam-nix.lib.${system};
-        scope = on.buildOpamProject' { resolveArgs.with-test = true; } ./. query;
+        scope = on.buildOpamProject' { } ./. query;
         overlay = final: prev: { };
         legacyPackages = scope.overrideScope overlay;
         devPackages = builtins.attrValues (
