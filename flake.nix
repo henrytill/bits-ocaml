@@ -53,7 +53,7 @@
             bits
             bits-goedel
           ];
-          packages = devPackages ++ [ ];
+          packages = devPackages ++ (with pkgs; [ aflplusplus ]);
         };
       in
       rec {
