@@ -36,6 +36,9 @@
         devPackagesQuery = {
           ocaml-lsp-server = "*";
           ocamlformat = "*";
+          # the following are necessary because the default scope is not created using with-test
+          mdx = "*";
+          sqlite3 = "*";
         };
         query = devPackagesQuery // {
           ocaml-base-compiler = "5.4.0";
