@@ -23,6 +23,5 @@ let compose this that =
   end
 
 let view (l : < get : 's -> 'a ; .. >) s = l#get s
-let get = view
 let set (l : < set : 'b -> 's -> 't ; .. >) b s = l#set b s
 let over (l : < get : 's -> 'a ; set : 'b -> 's -> 't ; .. >) f s = l#set (f (l#get s)) s
