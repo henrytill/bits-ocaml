@@ -36,16 +36,13 @@
         devPackagesQuery = {
           ocaml-lsp-server = "*";
           ocamlformat = "*";
-          # the following are necessary because the default scope is not created using with-test
-          mdx = "*";
-          sqlite3 = "*";
         };
         query = devPackagesQuery // {
           ocaml-base-compiler = "5.4.0";
         };
         pkgs = nixpkgs.legacyPackages.${system};
         on = opam-nix.lib.${system};
-        scope = on.buildOpamProject' { } ./. query;
+        scope = on.buildOpamProject' { resolveArgs.with-test = true; } ./. query;
         overlay = final: prev: { };
         legacyPackages = scope.overrideScope overlay;
         devPackages = builtins.attrValues (
